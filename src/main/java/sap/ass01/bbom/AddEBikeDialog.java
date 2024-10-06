@@ -1,6 +1,9 @@
 package sap.ass01.bbom;
 
 import javax.swing.*;
+
+import sap.ass01.presentation.AdminGUI;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,9 +30,9 @@ public class AddEBikeDialog extends JDialog {
     private JTextField yCoordField;
     private JButton okButton;
     private JButton cancelButton;
-    private EBikeApp app;
+    private AdminGUI app;
     
-    public AddEBikeDialog(EBikeApp owner) {
+    public AddEBikeDialog(AdminGUI owner) {
         super(owner, "Adding E-Bike", true);
         this.app = owner;
         initializeComponents();

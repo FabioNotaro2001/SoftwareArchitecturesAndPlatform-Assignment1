@@ -1,6 +1,9 @@
 package sap.ass01.bbom;
 
 import javax.swing.*;
+
+import sap.ass01.presentation.AdminGUI;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,10 +11,10 @@ import java.awt.event.ActionListener;
 public class RideSimulationControlPanel extends JFrame {
 
     private JButton stopButton;
-    private EBikeApp app;
+    private AdminGUI app;
     private Ride ride;
 
-    public RideSimulationControlPanel(Ride ride, EBikeApp app) {
+    public RideSimulationControlPanel(Ride ride, AdminGUI app) {
         super("Ongoing Ride: " + ride.getId());
     	setSize(400, 200);
         

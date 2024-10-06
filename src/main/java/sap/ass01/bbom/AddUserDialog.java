@@ -1,6 +1,9 @@
 package sap.ass01.bbom;
 
 import javax.swing.*;
+
+import sap.ass01.presentation.AdminGUI;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,9 +18,9 @@ public class AddUserDialog extends JDialog {
     private JTextField idField, errorField;
     private JButton okButton;
     private JButton cancelButton;
-    private EBikeApp app;
+    private AdminGUI app;
 
-    public AddUserDialog(EBikeApp owner) {
+    public AddUserDialog(AdminGUI owner) {
         super(owner, "Adding User", true);
         app = owner;
         initializeComponents();

@@ -3,6 +3,8 @@ package sap.ass01.bbom;
 import java.util.Date;
 import java.util.Optional;
 
+import sap.ass01.presentation.AdminGUI;
+
 public class Ride {
 
 	private Date startedDate;
@@ -25,7 +27,7 @@ public class Ride {
 		return id;
 	}
 
-	public void start(EBikeApp app) {
+	public void start(AdminGUI app) {
 		ongoing = true;
         rideSimulation = new RideSimulation(this, user, app);
         RideSimulationControlPanel ridingWindow = new RideSimulationControlPanel(this, app);

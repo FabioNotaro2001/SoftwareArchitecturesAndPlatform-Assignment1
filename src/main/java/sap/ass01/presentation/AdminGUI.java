@@ -1,4 +1,4 @@
-package sap.ass01.bbom;
+package sap.ass01.presentation;
 
 import java.awt.BorderLayout;
 import java.awt.Graphics;
@@ -8,27 +8,28 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.swing.*;
+import sap.ass01.bbom.AddEBikeDialog;
+import sap.ass01.bbom.AddUserDialog;
+import sap.ass01.bbom.EBike;
+import sap.ass01.bbom.P2d;
+import sap.ass01.bbom.Ride;
+import sap.ass01.bbom.User;
 
-
-public class EBikeApp extends JFrame implements ActionListener {
-    
+public class AdminGUI extends JFrame implements ActionListener {
     private VisualiserPanel centralPanel;
-    private JButton addUserButton, addEBikeButton, startRideButton;
+    private JButton addUserButton, addEBikeButton;
     private ConcurrentHashMap<String, EBike> bikes;
     private HashMap<String, User> users;
     private HashMap<String, Ride> rides;
     
     private int rideId;
     
-    public EBikeApp(){
+    public AdminGUI(){
         setupView();
         setupModel();
     }
@@ -45,7 +46,7 @@ public class EBikeApp extends JFrame implements ActionListener {
     }
 
     protected void setupView() {
-        setTitle("EBike App");        
+        setTitle("ADMIN GUI");        
         setSize(800,600);
         setResizable(false);
         
@@ -56,14 +57,10 @@ public class EBikeApp extends JFrame implements ActionListener {
 
 		addEBikeButton = new JButton("Add EBike");
 		addEBikeButton.addActionListener(this);
-
-		startRideButton = new JButton("Start Ride");
-		startRideButton.addActionListener(this);
 		
 		JPanel topPanel = new JPanel();
 		topPanel.add(addUserButton);		
-		topPanel.add(addEBikeButton);		
-		topPanel.add(startRideButton);		
+		topPanel.add(addEBikeButton);	
 	    add(topPanel,BorderLayout.NORTH);
 
         centralPanel = new VisualiserPanel(800,500,this);
@@ -144,9 +141,6 @@ public class EBikeApp extends JFrame implements ActionListener {
         } else if (e.getSource() == this.addUserButton) {
 		    JDialog d = new AddUserDialog(this);
 		    d.setVisible(true);
-        } else if (e.getSource() == this.startRideButton) {
-	        JDialog d = new RideDialog(this);
-	        d.setVisible(true);
         }
 	}
 
@@ -157,9 +151,9 @@ public class EBikeApp extends JFrame implements ActionListener {
     public static class VisualiserPanel extends JPanel {
         private long dx;
         private long dy;
-        private EBikeApp app;
+        private AdminGUI app;
         
-        public VisualiserPanel(int w, int h, EBikeApp app){
+        public VisualiserPanel(int w, int h, AdminGUI app){
             setSize(w,h);
             dx = w/2 - 20;
             dy = h/2 - 20;
@@ -205,7 +199,7 @@ public class EBikeApp extends JFrame implements ActionListener {
 	
 	
 	public static void main(String[] args) {
-		var w = new EBikeApp();
+		var w = new AdminGUI();
 		w.display();
 	}
 	

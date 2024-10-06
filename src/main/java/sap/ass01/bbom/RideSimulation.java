@@ -2,15 +2,17 @@ package sap.ass01.bbom;
 
 import java.util.Random;
 
+import sap.ass01.presentation.AdminGUI;
+
 public class RideSimulation extends Thread {
 	
 	private Ride ride;
 	private User user;
 	
-	private EBikeApp app;
+	private AdminGUI app;
 	private volatile boolean stopped;
 	
-	public RideSimulation(Ride ride, User user, EBikeApp app) {
+	public RideSimulation(Ride ride, User user, AdminGUI app) {
 		this.ride = ride;
 		this.user = user;
 		this.app = app;
@@ -37,9 +39,19 @@ public class RideSimulation extends Thread {
 			l = b.getLocation();
 			if (l.x() > 200 || l.x() < -200) {
 				b.updateDirection(new V2d(-d.x(), d.y()));
+				if (l.x() > 200) {
+					b.updateLocation(new P2d(200, l.y()));
+				} else {
+					b.updateLocation(new P2d(-200, l.y()));
+				}
 			};
 			if (l.y() > 200 || l.y() < -200) {
 				b.updateDirection(new V2d(d.x(), -d.y()));
+				if (l.y() > 200) {
+					b.updateLocation(new P2d(l.x(), 200));
+				} else {
+					b.updateLocation(new P2d(l.x(), -200));
+				}
 			};
 			
 			/* change dir randomly */

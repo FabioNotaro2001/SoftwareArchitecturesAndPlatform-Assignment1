@@ -1,7 +1,8 @@
-package sap.ass01.bbom;
+package sap.ass01.presentation;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -11,15 +12,15 @@ import java.awt.event.ActionListener;
  */
 public class RideDialog extends JDialog {
 
-    private JTextField idEBikeField;
+    private JComboBox<String> idEBikeField;
     private JTextField userName;
     private JButton startButton;
     private JButton cancelButton;
-    private EBikeApp app;
+    private UserGUI app;
     private String userRiding;
     private String bikeId;
 
-    public RideDialog(EBikeApp owner) {
+    public RideDialog(UserGUI owner) {
         super(owner, "Start Riding an EBike", true);
         initializeComponents();
         setupLayout();
@@ -30,7 +31,8 @@ public class RideDialog extends JDialog {
     }
 
     private void initializeComponents() {
-        idEBikeField = new JTextField(15);
+        String s1[] = { "Jalpaiguri", "Mumbai", "Noida", "Kolkata", "New Delhi" };
+        idEBikeField = new JComboBox(s1);
         userName = new JTextField(15);
         startButton = new JButton("Start Riding");
         cancelButton = new JButton("Cancel");
@@ -38,8 +40,6 @@ public class RideDialog extends JDialog {
 
     private void setupLayout() {
         JPanel inputPanel = new JPanel(new GridLayout(3, 2, 10, 10));
-        inputPanel.add(new JLabel("User name:"));
-        inputPanel.add(userName);
         inputPanel.add(new JLabel("E-Bike to ride:"));
         inputPanel.add(idEBikeField);
 
@@ -56,7 +56,7 @@ public class RideDialog extends JDialog {
         startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                bikeId = idEBikeField.getText();
+                bikeId = idEBikeField.getSelectedItem().toString();
 	            userRiding = userName.getText();
 	            cancelButton.setEnabled(false);
 	            app.startNewRide(userRiding, bikeId);
