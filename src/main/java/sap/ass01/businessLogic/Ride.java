@@ -1,8 +1,10 @@
-package sap.ass01.bbom;
+package sap.ass01.businessLogic;
 
 import java.util.Date;
 import java.util.Optional;
 
+import sap.ass01.bbom.RideSimulation;
+import sap.ass01.bbom.RideSimulationControlPanel;
 import sap.ass01.presentation.AdminGUI;
 
 public class Ride {

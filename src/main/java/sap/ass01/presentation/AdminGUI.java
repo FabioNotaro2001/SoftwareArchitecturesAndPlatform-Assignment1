@@ -15,10 +15,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.swing.*;
 import sap.ass01.bbom.AddEBikeDialog;
 import sap.ass01.bbom.AddUserDialog;
-import sap.ass01.bbom.EBike;
-import sap.ass01.bbom.P2d;
-import sap.ass01.bbom.Ride;
-import sap.ass01.bbom.User;
+import sap.ass01.businessLogic.EBike;
+import sap.ass01.businessLogic.P2d;
+import sap.ass01.businessLogic.Ride;
+import sap.ass01.businessLogic.User;
 
 public class AdminGUI extends JFrame implements ActionListener {
     private VisualiserPanel centralPanel;

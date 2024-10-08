@@ -2,6 +2,7 @@ package sap.ass01.bbom;
 
 import javax.swing.*;
 
+import sap.ass01.businessLogic.Ride;
 import sap.ass01.presentation.AdminGUI;
 
 import java.awt.*;

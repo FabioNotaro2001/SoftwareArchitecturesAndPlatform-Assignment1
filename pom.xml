@@ -40,6 +40,12 @@
       <artifactId>junit-jupiter-params</artifactId>
       <scope>test</scope>
     </dependency>
+  
+    <dependency>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-core</artifactId>
+      <version>4.0.0-milestone1</version>
+    </dependency>
   </dependencies>
 
   <build>

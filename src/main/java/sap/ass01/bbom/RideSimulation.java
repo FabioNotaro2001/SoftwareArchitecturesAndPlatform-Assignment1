@@ -2,6 +2,10 @@ package sap.ass01.bbom;
 
 import java.util.Random;
 
+import sap.ass01.businessLogic.P2d;
+import sap.ass01.businessLogic.Ride;
+import sap.ass01.businessLogic.User;
+import sap.ass01.businessLogic.V2d;
 import sap.ass01.presentation.AdminGUI;
 
 public class RideSimulation extends Thread {

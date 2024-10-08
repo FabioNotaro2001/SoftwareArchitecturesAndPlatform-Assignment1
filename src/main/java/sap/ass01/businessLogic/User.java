@@ -1,4 +1,4 @@
-package sap.ass01.bbom;
+package sap.ass01.businessLogic;
 
 public class User {
 
@@ -8,6 +8,11 @@ public class User {
 	public User(String id) {
 		this.id = id;
 		this.credit = 0;
+	}
+
+	public User(String id, int credit) {
+		this.id = id;
+		this.credit = credit;
 	}
 	
 	public String getId() {

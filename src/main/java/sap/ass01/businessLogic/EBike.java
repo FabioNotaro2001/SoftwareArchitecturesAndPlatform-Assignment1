@@ -1,6 +1,4 @@
-package sap.ass01.bbom;
-
-import java.util.Optional;
+package sap.ass01.businessLogic;
 
 public class EBike  {
 
@@ -18,6 +16,15 @@ public class EBike  {
 		this.loc = new P2d(0,0);
 		direction = new V2d(1,0);
 		speed = 0;
+	}
+
+	public EBike(String id, EBikeState eState, P2d loc, V2d direction, double speed, int batteryLevel) {
+		this.id = id;
+		this.state = eState;
+		this.loc = loc;
+		this.direction = direction;
+		this.speed = speed;
+		this.batteryLevel = batteryLevel;
 	}
 	
 	public String getId() {
