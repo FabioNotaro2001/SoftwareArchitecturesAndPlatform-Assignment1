@@ -35,8 +35,6 @@ public class Ride {
         RideSimulationControlPanel ridingWindow = new RideSimulationControlPanel(this, app);
         ridingWindow.display();
         rideSimulation.start();
-        
-        
 	}
 	
 	public void end() {

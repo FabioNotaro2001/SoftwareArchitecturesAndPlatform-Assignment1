@@ -12,17 +12,11 @@ public class UserGUI extends JFrame implements ActionListener {
     private JButton startRideButton;
     private JLabel userCreditLabel;
 
-    
     public UserGUI(){
-        setupView();
-        setupModel();
+        setup();
     }
 
-    
-    protected void setupModel() {
-    }
-
-    protected void setupView() {
+    protected void setup() {
         setTitle("USER GUI");        
         setSize(800,300);
         setResizable(false);

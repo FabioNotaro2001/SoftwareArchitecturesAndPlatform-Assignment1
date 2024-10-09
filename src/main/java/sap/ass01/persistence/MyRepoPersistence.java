@@ -4,6 +4,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import io.vertx.core.json.JsonObject;
 import sap.ass01.businessLogic.*;
@@ -18,7 +19,7 @@ public class MyRepoPersistence implements RepositoryInterface {
 	private String dbaseFolder;
 	
 	public MyRepoPersistence() {
-		this.dbaseFolder =  "database";
+		this.dbaseFolder =  "./database";
 	}
 
 	public void init() {
@@ -99,18 +100,18 @@ public class MyRepoPersistence implements RepositoryInterface {
 	}
 
 	@Override
-	public User getUserByID(String id) throws RepositoryException {
+	public Optional<User> getUserByID(String id) throws RepositoryException {
 		File userFile = new File(dbaseFolder + File.separator + PATH_USER + File.separator + id + ".json");
 		if (userFile.exists()) {
+			return Optional.empty();
+		} else {
 			try {
 				String content = new String(Files.readAllBytes(userFile.toPath()));
 				JsonObject obj = new JsonObject(content);
-				return new User(obj.getString("ID"), obj.getInteger("CREDIT"));
+				return Optional.of(new User(obj.getString("ID"), obj.getInteger("CREDIT")));
 			} catch (IOException e) {
 				throw new RepositoryException();
 			}
-		} else {
-			throw new RepositoryException();
 		}
 	}
 
@@ -146,25 +147,25 @@ public class MyRepoPersistence implements RepositoryInterface {
 	}
 
 	@Override
-	public EBike getEBikeByID(String id) throws RepositoryException {
+	public Optional<EBike> getEBikeByID(String id) throws RepositoryException {
 		File ebikeFile = new File(dbaseFolder + File.separator + PATH_EBIKE + File.separator + id + ".json");
-		if (ebikeFile.exists()) {
+		if (!ebikeFile.exists()) {
+			return Optional.empty();
+		} else {
 			try {
 				String content = new String(Files.readAllBytes(ebikeFile.toPath()));
 				JsonObject obj = new JsonObject(content);
-				return new EBike(
+				return Optional.of(new EBike(
 					obj.getString("ID"),
 					EBikeState.valueOf(obj.getString("STATE")),
 					new P2d(obj.getDouble("LOC_X"), obj.getDouble("LOC_Y")),
 					new V2d(obj.getDouble("DIR_X"), obj.getDouble("DIR_Y")),
 					obj.getDouble("SPEED"),
 					obj.getInteger("BATTERY")
-				);
+				));
 			} catch (IOException e) {
 				throw new RepositoryException();
 			}
-		} else {
-			throw new RepositoryException();
 		}
 	}
 
