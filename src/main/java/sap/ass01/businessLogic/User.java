@@ -1,7 +1,5 @@
 package sap.ass01.businessLogic;
 
-import java.rmi.Remote;
-
 public class User {
 
 	private String id;
