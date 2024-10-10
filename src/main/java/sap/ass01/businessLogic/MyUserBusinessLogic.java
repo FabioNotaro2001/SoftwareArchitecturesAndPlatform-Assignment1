@@ -6,13 +6,13 @@ import java.util.concurrent.Future;
 public class MyUserBusinessLogic implements UserBusinessLogic {
 
     @Override
-    public Future<List<User>> getUsers() {
+    public List<User> getUsers() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getUsers'");
     }
 
     @Override
-    public Future<List<EBike>> getEBikes() {
+    public List<EBike> getEBikes() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getEBikes'");
     }

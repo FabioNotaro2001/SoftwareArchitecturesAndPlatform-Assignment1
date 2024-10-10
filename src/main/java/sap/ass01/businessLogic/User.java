@@ -1,5 +1,7 @@
 package sap.ass01.businessLogic;
 
+import java.rmi.Remote;
+
 public class User {
 
 	private String id;
@@ -23,11 +25,11 @@ public class User {
 		return credit;
 	}
 	
-	public void rechargeCredit(int deltaCredit) {
+	public void rechargeCredit(int deltaCredit) { // FIXME: useless for user and admin
 		credit += deltaCredit;
 	}
 	
-	public void decreaseCredit(int amount) {
+	public void decreaseCredit(int amount) {	// FIXME: useless for user and admin
 		credit -= amount;
 		if (credit < 0) {
 			credit = 0;

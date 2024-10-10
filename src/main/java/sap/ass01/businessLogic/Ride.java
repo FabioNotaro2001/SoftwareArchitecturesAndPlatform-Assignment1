@@ -1,5 +1,6 @@
 package sap.ass01.businessLogic;
 
+import java.rmi.Remote;
 import java.util.Date;
 import java.util.Optional;
 
@@ -25,11 +26,11 @@ public class Ride {
 		this.ebike = ebike;
 	}
 	
-	public String getId() {
+	public synchronized String getId() {
 		return id;
 	}
 
-	public void start(AdminGUI app) {
+	public void start(AdminGUI app) { // FIXME: useless for user and admin
 		ongoing = true;
         rideSimulation = new RideSimulation(this, user, app);
         RideSimulationControlPanel ridingWindow = new RideSimulationControlPanel(this, app);
@@ -37,7 +38,7 @@ public class Ride {
         rideSimulation.start();
 	}
 	
-	public void end() {
+	public void end() {				// FIXME: useless for user and admin
 		endDate = Optional.of(new Date());
 		ongoing = false;
 		rideSimulation.stopSimulation();
@@ -47,11 +48,11 @@ public class Ride {
 		return startedDate;
 	}
 
-	public boolean isOngoing() {
+	public boolean isOngoing() {	// FIXME: useless for user and admin
 		return this.ongoing;
 	}
 	
-	public Optional<Date> getEndDate() {
+	public Optional<Date> getEndDate() {	// FIXME: useless for user and admin
 		return endDate;
 	}
 

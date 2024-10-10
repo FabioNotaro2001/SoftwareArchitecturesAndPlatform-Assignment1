@@ -1,6 +1,6 @@
 package sap.ass01.businessLogic;
 
-public class EBike  {
+public class EBike  {	// FIXME: a lot of methods are useless for user and admin
 
 	private String id;
 	public enum EBikeState { AVAILABLE, IN_USE, MAINTENANCE}	
@@ -51,7 +51,6 @@ public class EBike  {
 			state = EBikeState.MAINTENANCE;
 		}
 	}
-
 	
 	public boolean isAvailable() {
 		return state.equals(EBikeState.AVAILABLE);
