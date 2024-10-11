@@ -2,13 +2,11 @@ package sap.ass01.businessLogic;
 
 import java.util.Date;
 import java.util.Optional;
-
 import sap.ass01.bbom.RideSimulation;
 import sap.ass01.bbom.RideSimulationControlPanel;
 import sap.ass01.presentation.AdminGUI;
 
 public class Ride {
-
 	private Date startedDate;
 	private Optional<Date> endDate;
 	private User user;
@@ -61,6 +59,10 @@ public class Ride {
 
 	public EBike getEBike() {
 		return ebike;
+	}
+
+	public RideInfo getInfo(){
+		return new RideInfo(this.id, this.user.getId(), this.ebike.getId(), this.ongoing);
 	}
 	
 	public String toString() {

@@ -1,7 +1,6 @@
 package sap.ass01.businessLogic;
 
 public class User {
-
 	private String id;
 	private int credit;
 	
@@ -33,10 +32,12 @@ public class User {
 			credit = 0;
 		}
 	}
+
+	public UserInfo getInfo(){
+		return new UserInfo(this.id, this.credit);
+	}
 	
 	public String toString() {
 		return "{ id: " + id + ", credit: " + credit + " }";
 	}
-
-	
 }

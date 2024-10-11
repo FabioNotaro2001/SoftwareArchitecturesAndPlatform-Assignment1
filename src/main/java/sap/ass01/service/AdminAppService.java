@@ -1,9 +1,10 @@
-package sap.ass01.businessLogic;
+package sap.ass01.service;
 
 import java.rmi.RemoteException;
+import sap.ass01.businessLogic.RepositoryException;
 
-public interface AdminServer extends Server {
-    void registerForRidesUpdates(RideCallback callback) throws RemoteException;
+public interface AdminAppService extends AppService {
+    void registerAdmin(AdminCallback callback) throws RemoteException;
 
     void addEBike(String bikeID) throws RemoteException, RepositoryException;
 

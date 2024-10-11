@@ -3,7 +3,7 @@ package sap.ass01.businessLogic;
 public class EBike  {	// FIXME: a lot of methods are useless for user and admin
 
 	private String id;
-	public enum EBikeState { AVAILABLE, IN_USE, MAINTENANCE}	
+	public enum EBikeState { AVAILABLE, IN_USE, MAINTENANCE, DISMISSED }	
 	private EBikeState state;
 	private P2d loc;
 	private V2d direction; 
@@ -82,6 +82,10 @@ public class EBike  {	// FIXME: a lot of methods are useless for user and admin
 	
 	public P2d getLocation(){
 		return loc;
+	}
+
+	public EBikeInfo getInfo(){
+		return new EBikeInfo(this.id, this.state, this.loc, this.direction, this.speed, this.batteryLevel);
 	}
 	
 	public String toString() {
