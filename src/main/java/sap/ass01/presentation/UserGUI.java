@@ -7,7 +7,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.*;
 
-public class UserGUI extends JFrame implements ActionListener {
+public class UserGUI extends JFrame implements ActionListener, UserGUICallback {
     // TODO: ha senso che l'utente possa vedere in tempo reale il suo credito che scende e la batteria della bici che sta usando.
     private JButton startRideButton;
     private JLabel userCreditLabel;
@@ -87,6 +87,25 @@ public class UserGUI extends JFrame implements ActionListener {
 	public static void main(String[] args) {
 		var w = new UserGUI();
 		w.display();
+	}
+
+	@Override
+	public void notifyBikeStateChanged(String bikeID, String state, int batteryLevel) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'notifyBikeStateChanged'");
+	}
+
+	@Override
+	public void notifyUserCreditRecharged(String userID, int credits) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'notifyUserCreditRecharged'");
+	}
+
+	@Override
+	public void notifyRideStepDone(String userID, String bikeID, double x, double y, int batteryLevel, int userCredits,
+			boolean rideEnded) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'notifyRideStepDone'");
 	}
 
 }

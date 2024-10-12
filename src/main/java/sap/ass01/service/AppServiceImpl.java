@@ -8,7 +8,6 @@ import java.util.Map;
 import sap.ass01.businessLogic.*;
 import sap.ass01.businessLogic.EBike.EBikeState;
 
-
 public class AppServiceImpl implements AdminAppService, UserAppService {
     private static final String USER_SERVER_NAME = "userServer";
     private static final String ADMIN_SERVER_NAME = "adminServer";
@@ -98,5 +97,10 @@ public class AppServiceImpl implements AdminAppService, UserAppService {
         this.serverBL.removeEBike(bikeID);
         this.adminListeners.forEach(a -> a.notifyBikeStateChanged(bikeID, EBikeState.DISMISSED, 0));
         this.userListeners.values().forEach(u -> u.notifyBikeStateChanged(bikeID, EBikeState.DISMISSED, 0));
+    }
+
+    @Override
+    public List<RideInfo> getRides() throws RemoteException {
+        return this.serverBL.getRides();
     }
 }

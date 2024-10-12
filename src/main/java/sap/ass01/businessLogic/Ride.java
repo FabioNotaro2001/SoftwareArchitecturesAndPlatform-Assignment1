@@ -27,7 +27,7 @@ public class Ride {
 		return id;
 	}
 
-	public void start(AdminGUI app) { // FIXME: useless for user and admin
+	public void start(AdminGUI app) { 
 		ongoing = true;
         rideSimulation = new RideSimulation(this, user, app);
         RideSimulationControlPanel ridingWindow = new RideSimulationControlPanel(this, app);
@@ -35,7 +35,7 @@ public class Ride {
         rideSimulation.start();
 	}
 	
-	public void end() {				// FIXME: useless for user and admin
+	public void end() {				
 		endDate = Optional.of(new Date());
 		ongoing = false;
 		rideSimulation.stopSimulation();
@@ -45,11 +45,11 @@ public class Ride {
 		return startedDate;
 	}
 
-	public boolean isOngoing() {	// FIXME: useless for user and admin
+	public boolean isOngoing() {	
 		return this.ongoing;
 	}
 	
-	public Optional<Date> getEndDate() {	// FIXME: useless for user and admin
+	public Optional<Date> getEndDate() {
 		return endDate;
 	}
 

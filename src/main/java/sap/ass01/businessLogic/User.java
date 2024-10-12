@@ -22,11 +22,11 @@ public class User {
 		return credit;
 	}
 	
-	public void rechargeCredit(int deltaCredit) { // FIXME: useless for user and admin
+	public void rechargeCredit(int deltaCredit) { 
 		credit += deltaCredit;
 	}
 	
-	public void decreaseCredit(int amount) {	// FIXME: useless for user and admin
+	public void decreaseCredit(int amount) {	
 		credit -= amount;
 		if (credit < 0) {
 			credit = 0;

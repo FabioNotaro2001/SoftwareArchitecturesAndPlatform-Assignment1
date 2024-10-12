@@ -1,6 +1,6 @@
 package sap.ass01.businessLogic;
 
-public class EBike  {	// FIXME: a lot of methods are useless for user and admin
+public class EBike  {	
 
 	private String id;
 	public enum EBikeState { AVAILABLE, IN_USE, MAINTENANCE, DISMISSED }	
@@ -91,5 +91,4 @@ public class EBike  {	// FIXME: a lot of methods are useless for user and admin
 	public String toString() {
 		return "{ id: " + id + ", loc: " + loc + ", batteryLevel: " + batteryLevel + ", state: " + state + " }";
 	}
-	
 }

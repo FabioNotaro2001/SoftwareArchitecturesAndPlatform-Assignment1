@@ -3,7 +3,8 @@ package sap.ass01.businessLogic;
 import java.util.List;
 import java.util.concurrent.Future;
 
-public interface UserBusinessLogic { // FIXME
+// TODO: pensare a se serve questa interfaccia.
+public interface UserBusinessLogic { 
     List<User> getUsers();
 
     List<EBike> getEBikes();

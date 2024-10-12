@@ -2,7 +2,6 @@ package sap.ass01.businessLogic;
 
 import java.util.List;
 
-// TODO: cambiare gli oggetti restituiti, tipo User, con dei record per i loro dati.
 public interface Server {
     public List<UserInfo> getUsers();
 
@@ -23,4 +22,6 @@ public interface Server {
     public void addCredits(String userID, int credits) throws RepositoryException;
 
     public UserInfo createUser(String userID, int credits) throws IllegalArgumentException, RepositoryException;
+
+    public List<RideInfo> getRides();
 }

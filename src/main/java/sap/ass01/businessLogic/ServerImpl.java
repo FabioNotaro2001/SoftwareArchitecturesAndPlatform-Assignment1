@@ -25,12 +25,12 @@ public class ServerImpl implements Server {
 
     @Override
     public List<UserInfo> getUsers() {
-        return this.users.stream().map(u -> u.getInfo()).toList();
+        return this.users.stream().map(User::getInfo).toList();
     }
 
     @Override
     public List<EBikeInfo> getEBikes()  {
-        return this.bikes.stream().map(b -> b.getInfo()).toList();
+        return this.bikes.stream().map(EBike::getInfo).toList();
     }
 
     @Override
@@ -123,8 +123,6 @@ public class ServerImpl implements Server {
         this.users.add(user);
         this.repository.saveUser(user);
 
-        //TODO: notify admins of user creation
-
         return user.getInfo();
     }
 
@@ -164,5 +162,10 @@ public class ServerImpl implements Server {
         } 
         return targetBike.get().getInfo();
     }
-    // TODO: i thread vanno nel business logic o nel service? Rifletterci.
+    // TODO: i thread vanno nel business logic o nel service? Rifletterci. Forse ha senso metterli nel service.
+
+    @Override
+    public List<RideInfo> getRides() {
+        return this.rides.stream().map(Ride::getInfo).toList();
+    }
 }

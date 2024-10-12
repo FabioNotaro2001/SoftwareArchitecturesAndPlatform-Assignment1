@@ -3,6 +3,7 @@ package sap.ass01.businessLogic;
 import java.util.List;
 import java.util.concurrent.Future;
 
+// TODO: pensare se serve questa classe.
 public class MyUserBusinessLogic implements UserBusinessLogic {
 
     @Override
