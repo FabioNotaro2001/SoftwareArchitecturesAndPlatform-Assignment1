@@ -9,22 +9,29 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.*;
-import sap.ass01.bbom.AddEBikeDialog;
-import sap.ass01.bbom.AddUserDialog;
+
 import sap.ass01.businessLogic.EBike;
 import sap.ass01.businessLogic.EBikeInfo;
 import sap.ass01.businessLogic.P2d;
+import sap.ass01.businessLogic.RepositoryException;
 import sap.ass01.businessLogic.RideInfo;
+import sap.ass01.businessLogic.ServerImpl;
 import sap.ass01.businessLogic.User;
 import sap.ass01.businessLogic.UserInfo;
+import sap.ass01.businessLogic.V2d;
+import sap.ass01.businessLogic.EBike.EBikeState;
+import sap.ass01.persistence.MyRepoPersistence;
 import sap.ass01.service.AdminService;
+import sap.ass01.service.AdminServiceImpl;
+import sap.ass01.service.AppServiceImpl;
 
 public class AdminGUI extends JFrame implements ActionListener, AdminGUICallback {
     private VisualiserPanel centralPanel;
-    private JButton addUserButton, addEBikeButton;
+    private JButton addEBikeButton;
 	private AdminService adminService;
 	private Map<String, UserInfo> users = new HashMap<>();
 	private Map<String, EBikeInfo> bikes = new HashMap<>();
@@ -34,16 +41,21 @@ public class AdminGUI extends JFrame implements ActionListener, AdminGUICallback
 	private JList<String> bikesList;
 	private JList<String> ridesList;
 
-    public AdminGUI(AdminService adminService){
-        setupView();
-        setupModel();
-		this.adminService = adminService;
-    }
+	private DefaultListModel<String> usersModel;
+	private DefaultListModel<String> bikesModel;
+	private DefaultListModel<String> ridesModel;
 
+    public AdminGUI(AdminService adminService) throws RemoteException{
+		this.adminService = adminService;
+        setupModel();
+        setupView();
+    }
     
-    protected void setupModel() {
-        this.addUser("u1");
-        this.addEBike("b1", new P2d(0,0));
+    protected void setupModel() throws RemoteException {
+        this.adminService.getEBikes().forEach(x -> bikes.put(x.bikeID(), x));
+		this.adminService.getUsers().forEach(u -> users.put(u.userID(), u));
+		this.adminService.getRides().forEach(r -> rides.put(r.bikeID(), r));
+		this.adminService.registerGUI(this);
     }
 
     protected void setupView() {
@@ -53,14 +65,10 @@ public class AdminGUI extends JFrame implements ActionListener, AdminGUICallback
         
         setLayout(new BorderLayout());
 
-		addUserButton = new JButton("Add User");
-		addUserButton.addActionListener(this);
-
 		addEBikeButton = new JButton("Add EBike");
 		addEBikeButton.addActionListener(this);
 		
-		JPanel topPanel = new JPanel();
-		topPanel.add(addUserButton);		
+		JPanel topPanel = new JPanel();		
 		topPanel.add(addEBikeButton);	
 	    add(topPanel,BorderLayout.NORTH);
 
@@ -76,13 +84,9 @@ public class AdminGUI extends JFrame implements ActionListener, AdminGUICallback
 		JPanel eastPanel = new JPanel();
 		eastPanel.setLayout(new GridLayout(3, 1));
 
-
-		DefaultListModel<String> usersModel = new DefaultListModel<>();
-		usersModel.addAll(users.values().stream().map(UserInfo::toString).toList());
-		DefaultListModel<String> bikesModel = new DefaultListModel<>();
-		bikesModel.addAll(bikes.values().stream().map(EBikeInfo::toString).toList());
-		DefaultListModel<String> ridesModel = new DefaultListModel<>();
-		ridesModel.addAll(rides.values().stream().map(RideInfo::toString).toList());
+		this.usersModel = getUsersModel();
+		this.bikesModel = getBikesModel();
+		this.ridesModel = getRidesModel();
 		this.usersList = new JList<String>(usersModel);
 		this.bikesList = new JList<String>(bikesModel);
 		this.ridesList = new JList<String>(ridesModel);
@@ -93,24 +97,65 @@ public class AdminGUI extends JFrame implements ActionListener, AdminGUICallback
 		add(eastPanel, BorderLayout.EAST);		
     }
 
+	// TODO: NON FARE SALTI CON USERINFO E RIDEINFO
+	private void addRide(RideInfo info){
+		rides.put(info.id(), info);
+		ridesModel.addElement(info.toString());
+	}
+
+	private void removeRide(RideInfo info){
+		rides.remove(info.id());
+		ridesModel.clear();
+		ridesModel.addAll(rides.values().stream().map(RideInfo::toString).toList());
+	}
+
+	private void addUser(UserInfo info){
+		users.put(info.userID(), info);
+		usersModel.addElement(info.toString());
+	}
+
+	private void removeUser(UserInfo info){
+		users.remove(info.userID());
+		usersModel.clear();
+		usersModel.addAll(users.values().stream().map(UserInfo::toString).toList());
+	}
+
+	private void addEBike(EBikeInfo info){
+		bikes.put(info.bikeID(), info);
+		bikesModel.addElement(info.toString());
+	}
+
+	private void removeEBike(EBikeInfo info){
+		bikes.remove(info.bikeID());
+		bikesModel.clear();
+		bikesModel.addAll(bikes.values().stream().map(EBikeInfo::toString).toList());
+	}
+
+
+	private DefaultListModel<String> getRidesModel() {
+		DefaultListModel<String> ridesModel = new DefaultListModel<>();
+		ridesModel.addAll(rides.values().stream().map(RideInfo::toString).toList());
+		return ridesModel;
+	}
+
+
+	private DefaultListModel<String> getBikesModel() {
+		DefaultListModel<String> bikesModel = new DefaultListModel<>();
+		bikesModel.addAll(bikes.values().stream().map(EBikeInfo::toString).toList());
+		return bikesModel;
+	}
+
+
+	private DefaultListModel<String> getUsersModel() {
+		DefaultListModel<String> usersModel = new DefaultListModel<>();
+		usersModel.addAll(users.values().stream().map(UserInfo::toString).toList());
+		return usersModel;
+	}
+
     public void display() {
     	SwingUtilities.invokeLater(() -> {
     		this.setVisible(true);
     	});
-    }
-        
-    public void addEBike(String id, P2d loc) {
-    	EBike bike = new EBike(id);
-    	bike.updateLocation(loc);
-    	log("added new EBike " + bike);
-    	centralPanel.refresh();
-    }
-
-    public void addUser(String id) {
-    	User user = new User(id);
-    	user.rechargeCredit(100);
-    	log("added new User " + user);
-    	centralPanel.refresh();
     }
     
     public void refreshView() {
@@ -120,11 +165,8 @@ public class AdminGUI extends JFrame implements ActionListener, AdminGUICallback
     @Override
 	public void actionPerformed(ActionEvent e) {
         if (e.getSource() == this.addEBikeButton) {
-	        JDialog d = new AddEBikeDialog(this);
+	        JDialog d = new AddEBikeDialog(this, adminService);
 	        d.setVisible(true);
-        } else if (e.getSource() == this.addUserButton) {
-		    JDialog d = new AddUserDialog(this);
-		    d.setVisible(true);
         }
 	}
 
@@ -158,18 +200,25 @@ public class AdminGUI extends JFrame implements ActionListener, AdminGUICallback
             repaint();
         }
     }
-
 	
-	
-	public static void main(String[] args) {
-		var w = new AdminGUI(null);
+	public static void main(String[] args) throws RemoteException, RepositoryException {
+		var w = new AdminGUI(new AdminServiceImpl(new AppServiceImpl(new ServerImpl(new MyRepoPersistence()))));
 		w.display();
 	}
 
 
 	@Override
-	public void notifyBikeStateChanged(String bikeID, String state, int batteryLevel) {
-
+	public void notifyBikeStateChanged(String bikeID, String state, double x, double y, int batteryLevel) {
+		EBikeInfo eBikeInfo = null;
+		var bike = this.bikes.get(bikeID);
+		if(bike == null){
+			eBikeInfo = new EBikeInfo(bikeID, EBikeState.valueOf(state), new P2d(x, y), new V2d(-1,0), 0, batteryLevel);
+		} else {
+			eBikeInfo = new EBikeInfo(bikeID, EBikeState.valueOf(state), new P2d(x, y), bike.direction(), y, batteryLevel);
+		}
+		bikes.put(bikeID, eBikeInfo); 
+		addEBike(eBikeInfo);
+		centralPanel.refresh();
 	}
 
 

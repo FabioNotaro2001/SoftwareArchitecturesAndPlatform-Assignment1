@@ -18,6 +18,14 @@ public class EBike  {
 		speed = 0;
 	}
 
+	public EBike(String id, P2d pos) {
+		this.id = id;
+		this.state = EBikeState.AVAILABLE;
+		this.loc = pos;
+		direction = new V2d(1,0);
+		speed = 0;
+	}
+
 	public EBike(String id, EBikeState eState, P2d loc, V2d direction, double speed, int batteryLevel) {
 		this.id = id;
 		this.state = eState;

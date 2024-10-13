@@ -90,7 +90,7 @@ public class UserGUI extends JFrame implements ActionListener, UserGUICallback {
 	}
 
 	@Override
-	public void notifyBikeStateChanged(String bikeID, String state, int batteryLevel) {
+	public void notifyBikeStateChanged(String bikeID, String state, double x, double y, int batteryLevel) {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Unimplemented method 'notifyBikeStateChanged'");
 	}

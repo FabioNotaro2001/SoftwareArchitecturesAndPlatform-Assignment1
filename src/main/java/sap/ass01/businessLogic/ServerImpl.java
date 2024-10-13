@@ -34,8 +34,8 @@ public class ServerImpl implements Server {
     }
 
     @Override
-    public EBikeInfo addEBike(String bikeID) throws RepositoryException {
-        EBike bike = new EBike(bikeID);
+    public EBikeInfo addEBike(String bikeID, P2d pos) throws RepositoryException {
+        EBike bike = new EBike(bikeID, pos);
         this.bikes.add(bike);
         this.repository.saveEBike(bike);
         return bike.getInfo();

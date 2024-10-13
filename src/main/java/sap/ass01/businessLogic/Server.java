@@ -11,7 +11,7 @@ public interface Server {
 
     public EBikeInfo getEBikeByID(String bikeID) throws IllegalArgumentException;
 
-    public EBikeInfo addEBike(String bikeID) throws RepositoryException;
+    public EBikeInfo addEBike(String bikeID, P2d pos) throws RepositoryException;
 
     public void removeEBike(String bikeID) throws IllegalStateException, RepositoryException;
 

@@ -1,13 +1,15 @@
-package sap.ass01.bbom;
+package sap.ass01.presentation;
 
 import javax.swing.*;
 
 import sap.ass01.businessLogic.P2d;
-import sap.ass01.presentation.AdminGUI;
+import sap.ass01.businessLogic.RepositoryException;
+import sap.ass01.service.AdminService;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.RemoteException;
 
 /**
  * 
@@ -31,11 +33,11 @@ public class AddEBikeDialog extends JDialog {
     private JTextField yCoordField;
     private JButton okButton;
     private JButton cancelButton;
-    private AdminGUI app;
+    private AdminService adminService;
     
-    public AddEBikeDialog(AdminGUI owner) {
+    public AddEBikeDialog(AdminGUI owner, AdminService adminService) {
         super(owner, "Adding E-Bike", true);
-        this.app = owner;
+        this.adminService = adminService;
         initializeComponents();
         setupLayout();
         addEventHandlers();
@@ -77,7 +79,11 @@ public class AddEBikeDialog extends JDialog {
                 String id = idField.getText();
                 String xCoord = xCoordField.getText();
                 String yCoord = yCoordField.getText();
-                app.addEBike(id, new P2d(Integer.parseInt(xCoord), Integer.parseInt(yCoord)));
+                try {
+                    adminService.addEBike(id, Integer.parseInt(xCoord), Integer.parseInt(yCoord));
+                } catch (NumberFormatException | RemoteException | RepositoryException ex) {
+                    ex.printStackTrace();
+                }
                 dispose();
             }
         });
@@ -87,13 +93,6 @@ public class AddEBikeDialog extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 dispose();
             }
-        });
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            AddEBikeDialog dialog = new AddEBikeDialog(null);
-            dialog.setVisible(true);
         });
     }
 }

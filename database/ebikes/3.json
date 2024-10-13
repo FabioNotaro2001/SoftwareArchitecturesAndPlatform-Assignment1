@@ -1,0 +1,10 @@
+{
+  "ID" : "3",
+  "STATE" : "AVAILABLE",
+  "LOC_X" : 3.0,
+  "LOC_Y" : 3.0,
+  "DIR_X" : 1.0,
+  "DIR_Y" : 0.0,
+  "SPEED" : 0.0,
+  "BATTERY" : 0
+}

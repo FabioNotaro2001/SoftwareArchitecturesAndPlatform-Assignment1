@@ -1,8 +1,6 @@
-package sap.ass01.bbom;
+package sap.ass01.presentation;
 
 import javax.swing.*;
-
-import sap.ass01.presentation.AdminGUI;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -61,7 +59,7 @@ public class AddUserDialog extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 // Implement OK button behavior here
                 String id = idField.getText();
-                app.addUser(id);                
+                // app.addUser(id);                
                 dispose();
             }
         });
