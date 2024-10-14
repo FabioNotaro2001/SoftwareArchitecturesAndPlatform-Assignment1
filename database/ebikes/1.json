@@ -1,8 +1,8 @@
 {
   "ID" : "1",
   "STATE" : "AVAILABLE",
-  "LOC_X" : 1.0,
-  "LOC_Y" : 1.0,
+  "LOC_X" : 50.0,
+  "LOC_Y" : 50.0,
   "DIR_X" : 1.0,
   "DIR_Y" : 0.0,
   "SPEED" : 0.0,

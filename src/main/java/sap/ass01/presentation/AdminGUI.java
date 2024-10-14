@@ -13,14 +13,11 @@ import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.*;
-
-import sap.ass01.businessLogic.EBike;
 import sap.ass01.businessLogic.EBikeInfo;
 import sap.ass01.businessLogic.P2d;
 import sap.ass01.businessLogic.RepositoryException;
 import sap.ass01.businessLogic.RideInfo;
 import sap.ass01.businessLogic.ServerImpl;
-import sap.ass01.businessLogic.User;
 import sap.ass01.businessLogic.UserInfo;
 import sap.ass01.businessLogic.V2d;
 import sap.ass01.businessLogic.EBike.EBikeState;
@@ -181,19 +178,28 @@ public class AdminGUI extends JFrame implements ActionListener, AdminGUICallback
         
         public VisualiserPanel(int w, int h, AdminGUI app){
             setSize(w,h);
-            dx = w/2 - 20;
-            dy = h/2 - 20;
+            dx = w/2;
+            dy = h/2;
             this.app = app;
         }
 
         public void paint(Graphics g){
-    		Graphics2D g2 = (Graphics2D) g;
+			Graphics2D g2 = (Graphics2D) g;
     		
     		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-    		          RenderingHints.VALUE_ANTIALIAS_ON);
+			RenderingHints.VALUE_ANTIALIAS_ON);
     		g2.setRenderingHint(RenderingHints.KEY_RENDERING,
-    		          RenderingHints.VALUE_RENDER_QUALITY);
+			RenderingHints.VALUE_RENDER_QUALITY);
     		g2.clearRect(0,0,this.getWidth(),this.getHeight());
+			//g2.drawOval(0, 0, 100, 100);
+
+			app.bikes.values().forEach(b -> {
+				var p = b.loc();
+    			int x0 = (int)(p.x());
+		        int y0 = (int)(p.y());
+		        g2.drawOval(x0 ,y0,10,10);
+		        g2.drawString(b.bikeID(), x0, y0 + 35);
+			});
         }
         
         public void refresh(){
