@@ -6,15 +6,30 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.List;
+
 import javax.swing.*;
+
+import sap.ass01.businessLogic.EBikeInfo;
+import sap.ass01.businessLogic.RepositoryException;
+import sap.ass01.businessLogic.ServerImpl;
+import sap.ass01.businessLogic.UserInfo;
+import sap.ass01.businessLogic.EBike.EBikeState;
+import sap.ass01.persistence.MyRepoPersistence;
+import sap.ass01.service.AppServiceImpl;
+import sap.ass01.service.UserService;
+import sap.ass01.service.UserServiceImpl;
 
 public class UserGUI extends JFrame implements ActionListener, UserGUICallback {
     // TODO: ha senso che l'utente possa vedere in tempo reale il suo credito che scende e la batteria della bici che sta usando.
-	private JButton startRideButton;
-	private JButton endRideButton;
+
+    private UserService userService;
+    
+    private JButton startRideButton;
+    private JButton endRideButton;
     private JLabel userCreditLabel;
-	private JTextField creditRechargeTextField;
-	private JButton creditRechargeButton;
+    private JTextField creditRechargeTextField;
+    private JButton creditRechargeButton;
     
     // Nuovi componenti
     private JButton userRegisteredButton;
@@ -22,17 +37,24 @@ public class UserGUI extends JFrame implements ActionListener, UserGUICallback {
     private JComboBox<String> userDropdown;
     
     // Variabile per memorizzare l'utente selezionato
-    private String userConnected;
+    private UserInfo userInfo;
+
+    private List<String> users;
 
     // CardLayout per gestire i pannelli
     private JPanel mainPanel;
     private CardLayout cardLayout;
 
-    public UserGUI(){
-        setup();
+    public UserGUI(UserService userService) {
+        this.userService = userService;
+        setupView();
     }
 
-    protected void setup() {
+    protected void setupModel() {
+        this.userService.registerGUI(this);
+    }
+
+    protected void setupView() {
         setTitle("USER GUI");        
         setSize(800,300);
         setResizable(false);
@@ -65,23 +87,23 @@ public class UserGUI extends JFrame implements ActionListener, UserGUICallback {
         startRideButton = new JButton("Start Ride");
         startRideButton.addActionListener(this);
 
-		endRideButton = new JButton("End Ride");
-		endRideButton.addActionListener(this);
-		endRideButton.setEnabled(false);
+        endRideButton = new JButton("End Ride");
+        endRideButton.addActionListener(this);
+        endRideButton.setEnabled(false);
 
-		creditRechargeButton = new JButton("RICARICA");
-		creditRechargeButton.addActionListener(this);
-		creditRechargeTextField = new JTextField();
-		creditRechargeTextField.setColumns(2);
+        creditRechargeButton = new JButton("RICARICA");
+        creditRechargeButton.addActionListener(this);
+        creditRechargeTextField = new JTextField();
+        creditRechargeTextField.setColumns(2);
 
         userCreditLabel = new JLabel("Credit: 10000000000000000");
 
         // Aggiungi componenti al pannello del ride
         ridePanel.add(startRideButton);
-		ridePanel.add(endRideButton);
+        ridePanel.add(endRideButton);
         ridePanel.add(userCreditLabel);
-		ridePanel.add(creditRechargeTextField);
-		ridePanel.add(creditRechargeButton);
+        ridePanel.add(creditRechargeTextField);
+        ridePanel.add(creditRechargeButton);
 
         // Aggiungi entrambi i pannelli al mainPanel gestito da CardLayout
         mainPanel.add(userSelectionPanel, "UserSelection");
@@ -99,56 +121,58 @@ public class UserGUI extends JFrame implements ActionListener, UserGUICallback {
                 System.exit(-1);
             }
         });
+
+        pack();
     }
 
     public void display() {
-    	SwingUtilities.invokeLater(() -> {
+        SwingUtilities.invokeLater(() -> {
             this.setVisible(true);
         });
     }
 
     public void startNewRide(String userId, String bikeId) {
-    	/*rideId++; 	 
-    	String idRide = "ride-";
-    	
-    	var b = bikes.get(bikeId);
-    	var u = users.get(userId);
-    	var ride = new Ride(idRide, u, b);
-    	b.updateState(EBike.EBikeState.IN_USE);
-    	rides.put(idRide, ride);
-    	ride.start(this);
+        /*rideId++; 	 
+        String idRide = "ride-";
+        
+        var b = bikes.get(bikeId);
+        var u = users.get(userId);
+        var ride = new Ride(idRide, u, b);
+        b.updateState(EBike.EBikeState.IN_USE);
+        rides.put(idRide, ride);
+        ride.start(this);
         
         log("started new Ride " + ride);       */ 
     }
 
     public void endRide(String rideId) {
-    	/*var r = rides.get(rideId);
-    	r.end();
-    	rides.remove(rideId);*/
+        /*var r = rides.get(rideId);
+        r.end();
+        rides.remove(rideId);*/
     }
     
     //public Enumeration<EBike> getEBikes(){
-    	//return bikes.elements();
+        //return bikes.elements();
     //}
         
 
     @Override
-	public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent e) {
         if (e.getSource() == startRideButton) {
-			this.endRideButton.setEnabled(true);
-			this.startRideButton.setEnabled(false);
+            this.endRideButton.setEnabled(true);
+            this.startRideButton.setEnabled(false);
             JDialog d = new RideDialog(this);
             d.setVisible(true);
         } else if (e.getSource() == creditRechargeButton){
-			System.out.println(creditRechargeTextField.getText());
-		}else if (e.getSource() == endRideButton){
-			this.startRideButton.setEnabled(true);
-			this.endRideButton.setEnabled(false);
-			System.out.println("La corsa è finita andate in pace!");
-		}else if (e.getSource() == userRegisteredButton) {
+            System.out.println(creditRechargeTextField.getText());
+        } else if (e.getSource() == endRideButton){
+            this.startRideButton.setEnabled(true);
+            this.endRideButton.setEnabled(false);
+            System.out.println("La corsa è finita andate in pace!");
+        }else if (e.getSource() == userRegisteredButton) {
             // Salva l'utente selezionato nella variabile userConnected
-            userConnected = (String) userDropdown.getSelectedItem();
-            System.out.println("Utente connesso: " + userConnected);
+            // TODO: userConnected = (String) userDropdown.getSelectedItem();
+            // TODO: System.out.println("Utente connesso: " + userConnected);
 
             // Mostra il pannello successivo (Ride Panel) dopo la selezione dell'utente
             cardLayout.show(mainPanel, "RidePanel");
@@ -179,19 +203,19 @@ public class UserGUI extends JFrame implements ActionListener, UserGUICallback {
             // Mostra la dialog
             registerDialog.setVisible(true);
         }
-	}
+    }
 
-	private void log(String msg) {
-		System.out.println("[EBikeApp] " + msg);
-	}
-	
-	public static void main(String[] args) {
-		var w = new UserGUI();
+    private void log(String msg) {
+        System.out.println("[EBikeApp] " + msg);
+    }
+    
+    public static void main(String[] args) throws RepositoryException {
+		var w = new UserGUI(new UserServiceImpl(new AppServiceImpl(new ServerImpl(new MyRepoPersistence()))));
         w.display();
 	}
 
 	@Override
-	public void notifyBikeStateChanged(String bikeID, String state, double x, double y, int batteryLevel) {
+	public void notifyBikeStateChanged(String bikeID, EBikeState state, double x, double y, int batteryLevel) {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Unimplemented method 'notifyBikeStateChanged'");
 	}
@@ -203,7 +227,7 @@ public class UserGUI extends JFrame implements ActionListener, UserGUICallback {
 	}
 
 	@Override
-	public void notifyRideStepDone(String userID, String bikeID, double x, double y, int batteryLevel, int userCredits,
+	public void notifyRideStepDone(String rideId, double x, double y, int batteryLevel, int userCredits,
 			boolean rideEnded) {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Unimplemented method 'notifyRideStepDone'");

@@ -48,8 +48,8 @@ public class AppServiceImpl implements AdminAppService, UserAppService {
         RideInfo rideBegun = this.serverBL.beginRide(userID, bikeID);
         EBikeInfo bikeUsed = this.serverBL.getEBikeByID(bikeID);
 
-        this.adminListeners.forEach(a -> a.notifyBikeStateChanged(bikeID, bikeUsed.state(), bikeUsed.loc().x(), bikeUsed.loc().y(), bikeUsed.batteryLevel()));
-        this.userListeners.values().forEach(u -> u.notifyBikeStateChanged(bikeID,  bikeUsed.state(), bikeUsed.loc().x(), bikeUsed.loc().y(), bikeUsed.batteryLevel()));
+        this.adminListeners.forEach(LambdaUtil.wrap(a -> a.notifyBikeStateChanged(bikeID, bikeUsed.state(), bikeUsed.loc().x(), bikeUsed.loc().y(), bikeUsed.batteryLevel())));
+        this.userListeners.values().forEach(LambdaUtil.wrap(u -> u.notifyBikeStateChanged(bikeID,  bikeUsed.state(), bikeUsed.loc().x(), bikeUsed.loc().y(), bikeUsed.batteryLevel())));
 
         this.ridesListeners.put(bikeID, this.userListeners.get(userID));
         return rideBegun;
@@ -60,8 +60,8 @@ public class AppServiceImpl implements AdminAppService, UserAppService {
         this.serverBL.endRide(userID, bikeID);
         EBikeInfo bikeUsed = this.serverBL.getEBikeByID(bikeID);
 
-        this.adminListeners.forEach(a -> a.notifyBikeStateChanged(bikeID, bikeUsed.state(), bikeUsed.loc().x(), bikeUsed.loc().y(), bikeUsed.batteryLevel()));
-        this.userListeners.values().forEach(u -> u.notifyBikeStateChanged(bikeID,  bikeUsed.state(), bikeUsed.loc().x(), bikeUsed.loc().y(), bikeUsed.batteryLevel()));
+        this.adminListeners.forEach(LambdaUtil.wrap(a -> a.notifyBikeStateChanged(bikeID, bikeUsed.state(), bikeUsed.loc().x(), bikeUsed.loc().y(), bikeUsed.batteryLevel())));
+        this.userListeners.values().forEach(LambdaUtil.wrap(u -> u.notifyBikeStateChanged(bikeID,  bikeUsed.state(), bikeUsed.loc().x(), bikeUsed.loc().y(), bikeUsed.batteryLevel())));
 
         this.ridesListeners.remove(bikeID);
     }
@@ -71,13 +71,15 @@ public class AppServiceImpl implements AdminAppService, UserAppService {
         this.serverBL.addCredits(userID, credits);
         int creditUpdated = this.serverBL.getUserByID(userID).credits();
 
-        this.adminListeners.forEach(a -> a.notifyUserCreditRecharged(userID, creditUpdated));
+        this.adminListeners.forEach(LambdaUtil.wrap(a -> a.notifyUserCreditRecharged(userID, creditUpdated)));
         this.userListeners.get(userID).notifyUserCreditRecharged(userID, creditUpdated);
     }
 
     @Override
-    public void registerUser(String userID, UserCallback callback) {
+    public UserInfo registerUser(String userID, UserCallback callback) throws RemoteException, IllegalArgumentException {
+        var userInfo = this.serverBL.getUserByID(userID);
         this.userListeners.put(userID, callback);
+        return userInfo;
     }
 
     @Override
@@ -88,15 +90,15 @@ public class AppServiceImpl implements AdminAppService, UserAppService {
     @Override
     public void addEBike(String bikeID, P2d pos) throws RemoteException, RepositoryException {
         EBikeInfo bikeCreated = this.serverBL.addEBike(bikeID, pos);
-        this.adminListeners.forEach(a -> a.notifyBikeStateChanged(bikeID, bikeCreated.state(), pos.x(), pos.y(), bikeCreated.batteryLevel()));
-        this.userListeners.values().forEach(u -> u.notifyBikeStateChanged(bikeID, bikeCreated.state(), pos.x(), pos.y(), bikeCreated.batteryLevel()));
+        this.adminListeners.forEach(LambdaUtil.wrap(a -> a.notifyBikeStateChanged(bikeID, bikeCreated.state(), pos.x(), pos.y(), bikeCreated.batteryLevel())));
+        this.userListeners.values().forEach(LambdaUtil.wrap(u -> u.notifyBikeStateChanged(bikeID, bikeCreated.state(), pos.x(), pos.y(), bikeCreated.batteryLevel())));
     }
 
     @Override
     public void removeEBike(String bikeID) throws RemoteException, IllegalStateException, RepositoryException {
         this.serverBL.removeEBike(bikeID);
-        this.adminListeners.forEach(a -> a.notifyBikeStateChanged(bikeID, EBikeState.DISMISSED, 0, 0, 0));
-        this.userListeners.values().forEach(u -> u.notifyBikeStateChanged(bikeID, EBikeState.DISMISSED, 0, 0, 0));
+        this.adminListeners.forEach(LambdaUtil.wrap(a -> a.notifyBikeStateChanged(bikeID, EBikeState.DISMISSED, 0, 0, 0)));
+        this.userListeners.values().forEach(LambdaUtil.wrap(u -> u.notifyBikeStateChanged(bikeID, EBikeState.DISMISSED, 0, 0, 0)));
     }
 
     @Override

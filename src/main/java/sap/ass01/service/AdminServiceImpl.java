@@ -26,7 +26,7 @@ public class AdminServiceImpl implements AdminService{
 
     @Override
     public void notifyBikeStateChanged(String bikeID, EBikeState newState, double x, double y, int batteryLevel) {
-        this.adminGUICallback.notifyBikeStateChanged(bikeID, newState.name(), x, y, batteryLevel);
+        this.adminGUICallback.notifyBikeStateChanged(bikeID, newState, x, y, batteryLevel);
     }
 
     @Override
@@ -35,8 +35,8 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Override
-    public void notifyRideStepDone(String userID, String bikeID, P2d bikePos, int batteryLevel, int userCredits, boolean rideEnded) {
-        this.adminGUICallback.notifyRideStepDone(userID, bikeID, bikePos.x(), bikePos.y(), batteryLevel, userCredits, rideEnded);
+    public void notifyRideStepDone(String rideId, P2d bikePos, int batteryLevel, int userCredits, boolean rideEnded) {
+        this.adminGUICallback.notifyRideStepDone(rideId, bikePos.x(), bikePos.y(), batteryLevel, userCredits, rideEnded);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package sap.ass01.presentation;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
@@ -27,9 +28,10 @@ import sap.ass01.service.AdminServiceImpl;
 import sap.ass01.service.AppServiceImpl;
 
 public class AdminGUI extends JFrame implements ActionListener, AdminGUICallback {
-    private VisualiserPanel centralPanel;
-    private JButton addEBikeButton;
 	private AdminService adminService;
+
+	private VisualiserPanel centralPanel;
+    private JButton addEBikeButton;
 	private Map<String, UserInfo> users = new HashMap<>();
 	private Map<String, EBikeInfo> bikes = new HashMap<>();
 	private Map<String, RideInfo> rides = new HashMap<>();
@@ -80,50 +82,65 @@ public class AdminGUI extends JFrame implements ActionListener, AdminGUICallback
 
 		JPanel eastPanel = new JPanel();
 		eastPanel.setLayout(new GridLayout(3, 1));
-
+		eastPanel.setPreferredSize(new Dimension(300, 500));
+		
 		this.usersModel = getUsersModel();
 		this.bikesModel = getBikesModel();
 		this.ridesModel = getRidesModel();
 		this.usersList = new JList<String>(usersModel);
 		this.bikesList = new JList<String>(bikesModel);
 		this.ridesList = new JList<String>(ridesModel);
-
+		
 		eastPanel.add(new JScrollPane(usersList));
 		eastPanel.add(new JScrollPane(bikesList));
 		eastPanel.add(new JScrollPane(ridesList));
 		add(eastPanel, BorderLayout.EAST);		
     }
 
-	// TODO: NON FARE SALTI CON USERINFO E RIDEINFO
-	private void addRide(RideInfo info){
-		rides.put(info.id(), info);
-		ridesModel.addElement(info.toString());
+	private void addOrReplaceRide(RideInfo info){
+		var old = rides.put(info.rideId(), info);
+		if (old == null) {
+			ridesModel.addElement(info.toString());
+		} else {
+			ridesModel.clear();
+			ridesModel.addAll(rides.values().stream().map(RideInfo::toString).toList());	
+		}
 	}
 
-	private void removeRide(RideInfo info){
-		rides.remove(info.id());
+	private void addOrReplaceUser(UserInfo info){
+		var old = users.put(info.userID(), info);
+		if (old == null) {
+			usersModel.addElement(info.toString());
+		} else {
+			usersModel.clear();
+			usersModel.addAll(users.values().stream().map(UserInfo::toString).toList());
+		}
+	}
+
+	private void addOrReplaceEBike(EBikeInfo info){
+		var old = bikes.put(info.bikeID(), info);
+		if (old == null) {
+			bikesModel.addElement(info.toString());
+		} else {
+			bikesModel.clear();
+			bikesModel.addAll(bikes.values().stream().map(EBikeInfo::toString).toList());	
+		}
+	}
+
+	private void removeRide(String rideId){
+		rides.remove(rideId);
 		ridesModel.clear();
 		ridesModel.addAll(rides.values().stream().map(RideInfo::toString).toList());
 	}
-
-	private void addUser(UserInfo info){
-		users.put(info.userID(), info);
-		usersModel.addElement(info.toString());
-	}
-
-	private void removeUser(UserInfo info){
-		users.remove(info.userID());
+	
+	private void removeUser(String userId){
+		users.remove(userId);
 		usersModel.clear();
 		usersModel.addAll(users.values().stream().map(UserInfo::toString).toList());
 	}
 
-	private void addEBike(EBikeInfo info){
-		bikes.put(info.bikeID(), info);
-		bikesModel.addElement(info.toString());
-	}
-
-	private void removeEBike(EBikeInfo info){
-		bikes.remove(info.bikeID());
+	private void removeEBike(String bikeId){
+		bikes.remove(bikeId);
 		bikesModel.clear();
 		bikesModel.addAll(bikes.values().stream().map(EBikeInfo::toString).toList());
 	}
@@ -195,8 +212,8 @@ public class AdminGUI extends JFrame implements ActionListener, AdminGUICallback
 
 			app.bikes.values().forEach(b -> {
 				var p = b.loc();
-    			int x0 = (int)(p.x());
-		        int y0 = (int)(p.y());
+    			int x0 = (int)(dx + p.x());
+		        int y0 = (int)(dy - p.y());
 		        g2.drawOval(x0 ,y0,10,10);
 		        g2.drawString(b.bikeID(), x0, y0 + 35);
 			});
@@ -214,39 +231,46 @@ public class AdminGUI extends JFrame implements ActionListener, AdminGUICallback
 
 
 	@Override
-	public void notifyBikeStateChanged(String bikeID, String state, double x, double y, int batteryLevel) {
+	public void notifyBikeStateChanged(String bikeID, EBikeState state, double x, double y, int batteryLevel) {
 		EBikeInfo eBikeInfo = null;
 		var bike = this.bikes.get(bikeID);
 		if(bike == null){
-			eBikeInfo = new EBikeInfo(bikeID, EBikeState.valueOf(state), new P2d(x, y), new V2d(-1,0), 0, batteryLevel);
+			eBikeInfo = new EBikeInfo(bikeID, state, new P2d(x, y), new V2d(-1,0), 0, batteryLevel);
 		} else {
-			eBikeInfo = new EBikeInfo(bikeID, EBikeState.valueOf(state), new P2d(x, y), bike.direction(), y, batteryLevel);
+			eBikeInfo = new EBikeInfo(bikeID, state, new P2d(x, y), bike.direction(), y, batteryLevel);
 		}
-		bikes.put(bikeID, eBikeInfo); 
-		addEBike(eBikeInfo);
+		addOrReplaceEBike(eBikeInfo);
 		centralPanel.refresh();
 	}
 
 
 	@Override
 	public void notifyUserCreditRecharged(String userID, int credits) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'notifyUserCreditRecharged'");
+		var newUserInfo = new UserInfo(userID, credits);
+		addOrReplaceUser(newUserInfo);
 	}
 
 
 	@Override
-	public void notifyRideStepDone(String userID, String bikeID, double x, double y, int batteryLevel, int userCredits,
-			boolean rideEnded) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'notifyRideStepDone'");
+	public void notifyRideStepDone(String rideId, double x, double y, int batteryLevel, int userCredits, boolean rideEnded) {
+		var ride = rides.get(rideId);
+		var bike = bikes.get(ride.bikeID());
+
+		if (rideEnded) {
+			removeRide(rideId);
+		}
+
+		var newUser = new UserInfo(ride.userID(), userCredits);
+		addOrReplaceUser(newUser);
+
+		var newBike = new EBikeInfo(ride.bikeID(), bike.state(), new P2d(x, y), bike.direction(), bike.speed(), batteryLevel);
+		addOrReplaceEBike(newBike);
 	}
 
 
 	@Override
 	public void notifyUserCreated(String userID, int credits) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'notifyUserCreated'");
+		addOrReplaceUser(new UserInfo(userID, credits));
 	}
 	
 }
