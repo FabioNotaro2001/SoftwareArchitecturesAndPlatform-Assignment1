@@ -49,7 +49,7 @@ public interface UserService extends UserCallback {
      * @return a list of ebike information
      * @throws RemoteException
      */
-    List<EBikeInfo> getBikes() throws RemoteException;
+    List<EBikeInfo> getAvailableBikes() throws RemoteException;
 
     /**
      * Attempts to start a ride.

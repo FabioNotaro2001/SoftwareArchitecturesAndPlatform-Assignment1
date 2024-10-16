@@ -2,14 +2,12 @@ package sap.ass01.service;
 
 import java.rmi.RemoteException;
 import java.util.List;
-
 import sap.ass01.businessLogic.EBike.EBikeState;
 import sap.ass01.businessLogic.EBikeInfo;
 import sap.ass01.businessLogic.P2d;
 import sap.ass01.businessLogic.RepositoryException;
 import sap.ass01.businessLogic.RideInfo;
 import sap.ass01.businessLogic.UserInfo;
-import sap.ass01.presentation.AdminGUICallback;
 import sap.ass01.presentation.UserGUICallback;
 
 public class UserServiceImpl implements UserService {
@@ -41,8 +39,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<EBikeInfo> getBikes() throws RemoteException {
-        return this.userAppService.getEBikes();
+    public List<EBikeInfo> getAvailableBikes() throws RemoteException {
+        return this.userAppService.getEBikes().stream().filter(b -> b.state() == EBikeState.AVAILABLE).toList();
     }
 
     @Override

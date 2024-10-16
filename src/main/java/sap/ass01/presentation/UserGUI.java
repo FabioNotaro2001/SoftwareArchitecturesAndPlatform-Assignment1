@@ -1,17 +1,16 @@
 package sap.ass01.presentation;
 
-import java.awt.BorderLayout;
-import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.rmi.RemoteException;
 import java.util.List;
-
+import java.util.Vector;
 import javax.swing.*;
-
-import sap.ass01.businessLogic.EBikeInfo;
+import java.awt.*;
 import sap.ass01.businessLogic.RepositoryException;
+import sap.ass01.businessLogic.RideInfo;
 import sap.ass01.businessLogic.ServerImpl;
 import sap.ass01.businessLogic.UserInfo;
 import sap.ass01.businessLogic.EBike.EBikeState;
@@ -32,12 +31,9 @@ public class UserGUI extends JFrame implements ActionListener, UserGUICallback {
     private JButton creditRechargeButton;
     
     // Nuovi componenti
-    private JButton userRegisteredButton;
+    private JButton loginButton;
     private JButton registerUserButton;
     private JComboBox<String> userDropdown;
-    
-    // Variabile per memorizzare l'utente selezionato
-    private UserInfo userInfo;
 
     private List<String> users;
 
@@ -45,8 +41,13 @@ public class UserGUI extends JFrame implements ActionListener, UserGUICallback {
     private JPanel mainPanel;
     private CardLayout cardLayout;
 
-    public UserGUI(UserService userService) {
+    private UserInfo userConnected;
+
+    private RideInfo launchedRide;
+
+    public UserGUI(UserService userService) throws RemoteException {
         this.userService = userService;
+        setupModel();
         setupView();
     }
 
@@ -54,7 +55,7 @@ public class UserGUI extends JFrame implements ActionListener, UserGUICallback {
         this.userService.registerGUI(this);
     }
 
-    protected void setupView() {
+    protected void setupView() throws RemoteException {
         setTitle("USER GUI");        
         setSize(800,300);
         setResizable(false);
@@ -68,17 +69,17 @@ public class UserGUI extends JFrame implements ActionListener, UserGUICallback {
         JPanel userSelectionPanel = new JPanel();
 
         // Menu a tendina con nomi di persone
-        userDropdown = new JComboBox<>(new String[] {"Mario Rossi", "Luca Bianchi", "Giulia Verdi", "Anna Neri"});
-        userRegisteredButton = new JButton("Utente Registrato");
-        registerUserButton = new JButton("Registra Utente");
+        userDropdown = new JComboBox<>(new Vector<>(userService.getUsers()));
+        loginButton = new JButton("LOGIN");
+        registerUserButton = new JButton("NEW USER");
 
         // Assegna ActionListener
-        userRegisteredButton.addActionListener(this);
+        loginButton.addActionListener(this);
         registerUserButton.addActionListener(this);
 
         // Aggiungi componenti al pannello di selezione utente
         userSelectionPanel.add(userDropdown);
-        userSelectionPanel.add(userRegisteredButton);
+        userSelectionPanel.add(loginButton);
         userSelectionPanel.add(registerUserButton);
 
         // Pannello successivo (Start Ride e credito utente)
@@ -91,12 +92,12 @@ public class UserGUI extends JFrame implements ActionListener, UserGUICallback {
         endRideButton.addActionListener(this);
         endRideButton.setEnabled(false);
 
-        creditRechargeButton = new JButton("RICARICA");
+        creditRechargeButton = new JButton("RECHARGE");
         creditRechargeButton.addActionListener(this);
         creditRechargeTextField = new JTextField();
         creditRechargeTextField.setColumns(2);
 
-        userCreditLabel = new JLabel("Credit: 10000000000000000");
+        userCreditLabel = new JLabel("Credit: ");
 
         // Aggiungi componenti al pannello del ride
         ridePanel.add(startRideButton);
@@ -159,57 +160,78 @@ public class UserGUI extends JFrame implements ActionListener, UserGUICallback {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == startRideButton) {
-            this.endRideButton.setEnabled(true);
             this.startRideButton.setEnabled(false);
-            JDialog d = new RideDialog(this);
-            d.setVisible(true);
+            JDialog d;
+            try {
+                d = new RideDialog(this, this.userService);
+                d.setVisible(true);
+            } catch (RemoteException e1) {
+                e1.printStackTrace();
+            }
         } else if (e.getSource() == creditRechargeButton){
-            System.out.println(creditRechargeTextField.getText());
+            try {
+                this.userService.rechargeCredit(this.userConnected.userID(), Integer.parseInt(creditRechargeTextField.getText()));
+                userCreditLabel.setText("Credit: " + this.userConnected.credits());
+            } catch (NumberFormatException | RemoteException | RepositoryException e1) {
+                e1.printStackTrace();
+            }
         } else if (e.getSource() == endRideButton){
             this.startRideButton.setEnabled(true);
             this.endRideButton.setEnabled(false);
-            System.out.println("La corsa è finita andate in pace!");
-        }else if (e.getSource() == userRegisteredButton) {
+        }else if (e.getSource() == loginButton) {
             // Salva l'utente selezionato nella variabile userConnected
-            // TODO: userConnected = (String) userDropdown.getSelectedItem();
-            // TODO: System.out.println("Utente connesso: " + userConnected);
+            try {
+                this.userConnected = this.userService.logAsUser((String) userDropdown.getSelectedItem());
+                userCreditLabel.setText("Credit: " + this.userConnected.credits());
+                this.pack();
+            } catch (RemoteException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
 
             // Mostra il pannello successivo (Ride Panel) dopo la selezione dell'utente
             cardLayout.show(mainPanel, "RidePanel");
         } else if (e.getSource() == registerUserButton) {
             // Mostra una JDialog per registrare un nuovo utente
-            JDialog registerDialog = new JDialog(this, "Registra Nuovo Utente", true);
+            JDialog registerDialog = new JDialog(this, "CREATE NEW USER", true);
             registerDialog.setSize(300, 150);
-            registerDialog.setLayout(new BorderLayout());
+            registerDialog.setLayout(new GridLayout(3, 1));
 
             // Aggiungi un campo di testo per l'inserimento del nuovo nome utente
             JTextField newUserField = new JTextField();
-            JButton confirmButton = new JButton("Conferma");
+            JButton confirmButton = new JButton("REGISTER");
 
             confirmButton.addActionListener(ev -> {
+                UserInfo newUserToBeChecked;
                 String newUser = newUserField.getText();
                 if (!newUser.isEmpty()) {
+                    try {
+                        newUserToBeChecked = this.userService.createUser(newUser, 100);
+                        if (newUserToBeChecked == null){
+                            JOptionPane.showMessageDialog(this, "Error when attempting to create your account", "ERROR", JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+                    } catch (RemoteException | RepositoryException e1) {
+                        e1.printStackTrace();
+                    }
+
                     userDropdown.addItem(newUser);
+                    
                     registerDialog.dispose();
-                    System.out.println("Nuovo utente registrato: " + newUser);
                 }
             });
 
             // Aggiungi i componenti alla dialog
-            registerDialog.add(new JLabel("Inserisci nome utente:"), BorderLayout.NORTH);
-            registerDialog.add(newUserField, BorderLayout.CENTER);
-            registerDialog.add(confirmButton, BorderLayout.SOUTH);
+            registerDialog.add(new JLabel("INSERT USER-ID:"));
+            registerDialog.add(newUserField);
+            registerDialog.add(confirmButton);
 
             // Mostra la dialog
             registerDialog.setVisible(true);
         }
     }
-
-    private void log(String msg) {
-        System.out.println("[EBikeApp] " + msg);
-    }
     
-    public static void main(String[] args) throws RepositoryException {
+    public static void main(String[] args) throws RepositoryException, RemoteException {
 		var w = new UserGUI(new UserServiceImpl(new AppServiceImpl(new ServerImpl(new MyRepoPersistence()))));
         w.display();
 	}
@@ -222,8 +244,7 @@ public class UserGUI extends JFrame implements ActionListener, UserGUICallback {
 
 	@Override
 	public void notifyUserCreditRecharged(String userID, int credits) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'notifyUserCreditRecharged'");
+		this.userConnected = new UserInfo(userID, credits);
 	}
 
 	@Override
@@ -232,5 +253,10 @@ public class UserGUI extends JFrame implements ActionListener, UserGUICallback {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Unimplemented method 'notifyRideStepDone'");
 	}
+
+    public void setLaunchedRide(RideInfo newRide){
+        this.launchedRide = newRide;
+        this.endRideButton.setEnabled(true);
+    }
 
 }

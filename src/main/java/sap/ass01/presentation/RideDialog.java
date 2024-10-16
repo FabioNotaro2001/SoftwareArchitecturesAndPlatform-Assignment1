@@ -1,38 +1,43 @@
 package sap.ass01.presentation;
 
 import javax.swing.*;
+import sap.ass01.service.UserService;
 import java.awt.*;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.RemoteException;
+import java.util.List;
+import java.util.Vector;
 
 /**
  * Adapted from AddEBikeDialog
  * 
  */
 public class RideDialog extends JDialog {
-
-    private JComboBox<String> idEBikeField;
+    private JComboBox<String> bikesComboBox;
     private JTextField userName;
     private JButton startButton;
     private JButton cancelButton;
-    private UserGUI app;
+    private UserGUI fatherUserGUI;
     private String userRiding;
-    private String bikeId;
+    private List<String> availableBikes;
+    private String bikeSelectedID;
+    private UserService userService;
 
-    public RideDialog(UserGUI owner) {
-        super(owner, "Start Riding an EBike", true);
+    public RideDialog(UserGUI fatherUserGUI, UserService userService) throws RemoteException {
+        super(fatherUserGUI, "Start Riding an EBike", true);
+        this.userService = userService;
+        this.availableBikes = this.userService.getAvailableBikes().stream().map(b -> b.bikeID()).toList();
         initializeComponents();
         setupLayout();
-        addEventHandlers();
         pack();
-        setLocationRelativeTo(owner);
-        app = owner;
+        addEventHandlers();
+        setLocationRelativeTo(fatherUserGUI);
+        this.fatherUserGUI = fatherUserGUI;
     }
 
     private void initializeComponents() {
-        String s1[] = { "Jalpaiguri", "Mumbai", "Noida", "Kolkata", "New Delhi" };
-        idEBikeField = new JComboBox(s1);
+        bikesComboBox = new JComboBox<String>(new Vector<>(this.availableBikes));
         userName = new JTextField(15);
         startButton = new JButton("Start Riding");
         cancelButton = new JButton("Cancel");
@@ -41,7 +46,7 @@ public class RideDialog extends JDialog {
     private void setupLayout() {
         JPanel inputPanel = new JPanel(new GridLayout(3, 2, 10, 10));
         inputPanel.add(new JLabel("E-Bike to ride:"));
-        inputPanel.add(idEBikeField);
+        inputPanel.add(bikesComboBox);
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(startButton);
@@ -56,10 +61,14 @@ public class RideDialog extends JDialog {
         startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                bikeId = idEBikeField.getSelectedItem().toString();
+                bikeSelectedID =  bikesComboBox.getSelectedItem().toString();
 	            userRiding = userName.getText();
 	            cancelButton.setEnabled(false);
-	            app.startNewRide(userRiding, bikeId);
+                try {
+                    fatherUserGUI.setLaunchedRide(userService.beginRide(userRiding, bikeSelectedID));
+                } catch (RemoteException e1) {
+                    e1.printStackTrace();
+                }
 	            dispose();
             }
         });
@@ -71,12 +80,4 @@ public class RideDialog extends JDialog {
             }
         });
     }
-    
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-        	RideDialog dialog = new RideDialog(null);
-            dialog.setVisible(true);
-        });
-    }
-    
 }
