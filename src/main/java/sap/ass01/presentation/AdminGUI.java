@@ -224,6 +224,7 @@ public class AdminGUI extends JFrame implements ActionListener, AdminGUICallback
         }
     }
 	
+	// TODO: per far passare i test o spostare i main fuori da questo package o cambiare tutti i costruttori.
 	public static void main(String[] args) throws RemoteException, RepositoryException {
 		var w = new AdminGUI(new AdminServiceImpl(new AppServiceImpl(new ServerImpl(new MyRepoPersistence()))));
 		w.display();
