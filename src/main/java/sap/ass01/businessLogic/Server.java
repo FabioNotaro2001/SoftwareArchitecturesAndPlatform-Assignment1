@@ -11,17 +11,21 @@ public interface Server {
 
     public EBikeInfo getEBikeByID(String bikeID) throws IllegalArgumentException;
 
+    public EBikeInfo updateEBike(EBikeInfo bikeInfo) throws IllegalArgumentException, RepositoryException;
+
     public EBikeInfo addEBike(String bikeID, P2d pos) throws RepositoryException;
 
     public void removeEBike(String bikeID) throws IllegalStateException, RepositoryException;
 
-    public RideInfo beginRide(String userID, String bikeID) throws IllegalArgumentException;
+    public List<RideInfo> getRides();
 
-    public void endRide(String userID, String bikeID) throws IllegalArgumentException;
+    public RideInfo beginRide(String userID, String bikeID) throws IllegalArgumentException, RepositoryException;
 
-    public void addCredits(String userID, int credits) throws RepositoryException;
+    public void endRide(String userID, String bikeID) throws IllegalArgumentException, RepositoryException;
 
     public UserInfo createUser(String userID, int credits) throws IllegalArgumentException, RepositoryException;
 
-    public List<RideInfo> getRides();
+    public void addCredits(String userID, int credits) throws IllegalArgumentException, RepositoryException;
+    
+    public void decreaseCredits(String userID, int credits) throws IllegalArgumentException, RepositoryException;
 }

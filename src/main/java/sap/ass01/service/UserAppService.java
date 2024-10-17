@@ -29,7 +29,7 @@ public interface UserAppService extends AppService {
      * @throws IllegalArgumentException if the user or the bike doesn't exist
      * @throws IllegalStateException if the bike is unavailable in any way
      */
-    RideInfo beginRide(String userID, String bikeID) throws RemoteException, IllegalArgumentException, IllegalStateException;
+    RideInfo beginRide(String userID, String bikeID) throws RemoteException, IllegalArgumentException, IllegalStateException, RepositoryException;
 
     /**
      * Ends an active ride.
@@ -37,8 +37,9 @@ public interface UserAppService extends AppService {
      * @param bikeID the bike's id
      * @throws RemoteException
      * @throws IllegalArgumentException if the user is not in a ride with the given bike
+     * @throws RepositoryException 
      */
-    void endRide(String userID, String bikeID) throws RemoteException, IllegalArgumentException;
+    void endRide(String userID, String bikeID) throws RemoteException, IllegalArgumentException, RepositoryException;
 
     /**
      * Adds credits to a user

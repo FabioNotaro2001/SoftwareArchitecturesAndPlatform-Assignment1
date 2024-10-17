@@ -57,8 +57,11 @@ public interface UserService extends UserCallback {
      * @param bikeId the bike's id
      * @return the new ride's information if successful, {@code null} otherwise
      * @throws RemoteException
+     * @throws RepositoryException 
+     * @throws IllegalStateException 
+     * @throws IllegalArgumentException 
      */
-    RideInfo beginRide(String userId, String bikeId) throws RemoteException;
+    RideInfo beginRide(String userId, String bikeId) throws RemoteException, IllegalArgumentException, IllegalStateException, RepositoryException;
     
     /**
      * Attempts to end a ride.
@@ -66,8 +69,9 @@ public interface UserService extends UserCallback {
      * @param bikeId the bike's id
      * @return {@code true} if successful, {@code false} otherwise
      * @throws RemoteException
+     * @throws RepositoryException 
      */
-    boolean endRide(String userId, String bikeId) throws RemoteException;
+    boolean endRide(String userId, String bikeId) throws RemoteException, RepositoryException;
 
     /**
      * Attempts to recharge a user's credit.

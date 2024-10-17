@@ -35,8 +35,6 @@ public class UserGUI extends JFrame implements ActionListener, UserGUICallback {
     private JButton registerUserButton;
     private JComboBox<String> userDropdown;
 
-    private List<String> users;
-
     // CardLayout per gestire i pannelli
     private JPanel mainPanel;
     private CardLayout cardLayout;
@@ -131,30 +129,6 @@ public class UserGUI extends JFrame implements ActionListener, UserGUICallback {
             this.setVisible(true);
         });
     }
-
-    public void startNewRide(String userId, String bikeId) {
-        /*rideId++; 	 
-        String idRide = "ride-";
-        
-        var b = bikes.get(bikeId);
-        var u = users.get(userId);
-        var ride = new Ride(idRide, u, b);
-        b.updateState(EBike.EBikeState.IN_USE);
-        rides.put(idRide, ride);
-        ride.start(this);
-        
-        log("started new Ride " + ride);       */ 
-    }
-
-    public void endRide(String rideId) {
-        /*var r = rides.get(rideId);
-        r.end();
-        rides.remove(rideId);*/
-    }
-    
-    //public Enumeration<EBike> getEBikes(){
-        //return bikes.elements();
-    //}
         
 
     @Override
@@ -163,7 +137,7 @@ public class UserGUI extends JFrame implements ActionListener, UserGUICallback {
             this.startRideButton.setEnabled(false);
             JDialog d;
             try {
-                d = new RideDialog(this, this.userService);
+                d = new RideDialog(this, this.userConnected.userID(), this.userService);
                 d.setVisible(true);
             } catch (RemoteException e1) {
                 e1.printStackTrace();
@@ -176,6 +150,11 @@ public class UserGUI extends JFrame implements ActionListener, UserGUICallback {
                 e1.printStackTrace();
             }
         } else if (e.getSource() == endRideButton){
+            try {
+                this.userService.endRide(launchedRide.userID(), launchedRide.bikeID());
+            } catch (RemoteException | RepositoryException e1) {
+                e1.printStackTrace();
+            }
             this.startRideButton.setEnabled(true);
             this.endRideButton.setEnabled(false);
         }else if (e.getSource() == loginButton) {
@@ -238,25 +217,49 @@ public class UserGUI extends JFrame implements ActionListener, UserGUICallback {
 
 	@Override
 	public void notifyBikeStateChanged(String bikeID, EBikeState state, double x, double y, int batteryLevel) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'notifyBikeStateChanged'");
+        if (launchedRide == null || launchedRide.bikeID() != bikeID) {
+            return;
+        }
+
+        switch (state) {
+            case AVAILABLE:
+                if (userConnected.credits() <= 0) {
+                    System.out.println("Ride ended due to lack of credits.");
+                }
+                this.launchedRide = null;
+
+                this.startRideButton.setEnabled(true);
+                this.endRideButton.setEnabled(false);
+                break;
+            case MAINTENANCE:
+                System.out.println("Bike ran out of battery.");
+                this.launchedRide = null;
+                
+                this.startRideButton.setEnabled(true);
+                this.endRideButton.setEnabled(false);
+                break;
+            default:
+                break;
+        }
 	}
 
 	@Override
 	public void notifyUserCreditRecharged(String userID, int credits) {
 		this.userConnected = new UserInfo(userID, credits);
+        this.userCreditLabel.setText("Credits: " + credits);
+        pack();
 	}
 
 	@Override
-	public void notifyRideStepDone(String rideId, double x, double y, int batteryLevel, int userCredits,
-			boolean rideEnded) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'notifyRideStepDone'");
+	public void notifyRideStepDone(String rideId, double x, double y, int batteryLevel, int userCredits) {
+		System.out.println("Bike moving, pos: (" + x + ", " + y + "), battery level: " + batteryLevel + ", credits left: " + userCredits);
+        this.userConnected = new UserInfo(this.userConnected.userID(), userCredits);
+        this.userCreditLabel.setText("Credits: " + userCredits);
+        pack();
 	}
 
     public void setLaunchedRide(RideInfo newRide){
         this.launchedRide = newRide;
         this.endRideButton.setEnabled(true);
     }
-
 }

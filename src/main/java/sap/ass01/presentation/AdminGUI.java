@@ -240,6 +240,14 @@ public class AdminGUI extends JFrame implements ActionListener, AdminGUICallback
 			eBikeInfo = new EBikeInfo(bikeID, state, new P2d(x, y), bike.direction(), y, batteryLevel);
 		}
 		addOrReplaceEBike(eBikeInfo);
+
+		if (state != EBikeState.IN_USE) {
+			var ride = rides.values().stream().filter(r -> r.bikeID() == bikeID).findFirst();
+			if (ride.isPresent()) {
+				removeRide(ride.get().rideId());
+			}
+		}
+
 		centralPanel.refresh();
 	}
 
@@ -252,13 +260,9 @@ public class AdminGUI extends JFrame implements ActionListener, AdminGUICallback
 
 
 	@Override
-	public void notifyRideStepDone(String rideId, double x, double y, int batteryLevel, int userCredits, boolean rideEnded) {
+	public void notifyRideStepDone(String rideId, double x, double y, int batteryLevel, int userCredits) {
 		var ride = rides.get(rideId);
 		var bike = bikes.get(ride.bikeID());
-
-		if (rideEnded) {
-			removeRide(rideId);
-		}
 
 		var newUser = new UserInfo(ride.userID(), userCredits);
 		addOrReplaceUser(newUser);

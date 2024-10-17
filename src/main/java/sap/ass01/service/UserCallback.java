@@ -35,8 +35,7 @@ public interface UserCallback extends Remote {
      * @param bikePos the ebike's position
      * @param batteryLevel the ebike's battery level
      * @param userCredits the user's current credit
-     * @param rideEnded boolean for whether the ride is ongoing or has now ended
      * @throws RemoteException
      */
-    void notifyRideStepDone(String rideId, P2d bikePos, int batteryLevel, int userCredits, boolean rideEnded) throws RemoteException;
+    void notifyRideStepDone(String rideId, P2d bikePos, int batteryLevel, int userCredits) throws RemoteException;
 }

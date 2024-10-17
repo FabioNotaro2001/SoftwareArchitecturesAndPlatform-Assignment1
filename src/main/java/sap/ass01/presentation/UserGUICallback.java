@@ -7,5 +7,5 @@ public interface UserGUICallback {
 
     void notifyUserCreditRecharged(String userID, int credits);
 
-    void notifyRideStepDone(String rideId, double x, double y, int batteryLevel, int userCredits, boolean rideEnded);
+    void notifyRideStepDone(String rideId, double x, double y, int batteryLevel, int userCredits);
 }

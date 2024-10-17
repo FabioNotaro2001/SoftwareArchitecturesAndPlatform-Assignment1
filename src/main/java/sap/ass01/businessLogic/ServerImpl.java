@@ -6,7 +6,11 @@ import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import sap.ass01.businessLogic.EBike.EBikeState;
 import sap.ass01.persistence.MyRepoPersistence;
+
+// TODO: batteria delle bici deve ricaricarsi (thread?)
 
 public class ServerImpl implements Server {
     private RepositoryInterface repository;
@@ -50,7 +54,7 @@ public class ServerImpl implements Server {
     }
 
     @Override
-    public RideInfo beginRide(String userID, String bikeID) throws IllegalArgumentException {
+    public RideInfo beginRide(String userID, String bikeID) throws RepositoryException, IllegalArgumentException {
         var userOpt = this.users.stream().filter(u -> u.getId().equals(userID)).findFirst();
         var bikeOpt = this.bikes.stream().filter(b -> b.getId().equals(bikeID)).findFirst();
         
@@ -63,18 +67,17 @@ public class ServerImpl implements Server {
 
         var user = userOpt.get();
         var bike = bikeOpt.get();
+        bike.updateState(EBikeState.IN_USE);
+        updateEBike(bike.getInfo());
 
         var ride = new Ride(String.valueOf(rideId++), user, bike);
         this.rides.add(ride);
-
-        // TODO: start ride in thread
-        // ride.start(null);
 
         return ride.getInfo();
     }
 
     @Override
-    public void endRide(String userID, String bikeID) throws IllegalArgumentException {
+    public void endRide(String userID, String bikeID) throws IllegalArgumentException, RepositoryException {
         var userOpt = this.users.stream().filter(u -> u.getId().equals(userID)).findFirst();
         var bikeOpt = this.bikes.stream().filter(b -> b.getId().equals(bikeID)).findFirst();
         if (userOpt.isEmpty()) {
@@ -86,6 +89,9 @@ public class ServerImpl implements Server {
 
         var user = userOpt.get();
         var bike = bikeOpt.get();
+        bike.updateState(bike.getBatteryLevel() > 0 ? EBikeState.AVAILABLE : EBikeState.MAINTENANCE);
+        bike.updateSpeed(0);
+        updateEBike(bike.getInfo());
 
         var rideOpt = this.rides.stream().filter(r -> r.getEBike() == bike).findFirst();
         if (rideOpt.isEmpty()) {
@@ -96,13 +102,10 @@ public class ServerImpl implements Server {
         if(ride.getUser() != user) {
             throw new IllegalArgumentException("The given user is not riding the bike");
         }
-
-        // TODO: stop ride
-        // ride.end();
     }
 
     @Override
-    public void addCredits(String userID, int credits) throws RepositoryException {
+    public void addCredits(String userID, int credits) throws IllegalArgumentException, RepositoryException {
         var userOpt = this.users.stream().filter(u -> u.getId().equals(userID)).findFirst();
         if (userOpt.isEmpty()) {
             throw new IllegalArgumentException("Invalid user id");
@@ -110,6 +113,18 @@ public class ServerImpl implements Server {
 
         var user = userOpt.get();
         user.rechargeCredit(credits);
+        this.repository.saveUser(user);
+    }
+
+    @Override
+    public void decreaseCredits(String userID, int credits) throws IllegalArgumentException, RepositoryException {
+        var userOpt = this.users.stream().filter(u -> u.getId().equals(userID)).findFirst();
+        if (userOpt.isEmpty()) {
+            throw new IllegalArgumentException("Invalid user id");
+        }
+
+        var user = userOpt.get();
+        user.decreaseCredit(credits);
         this.repository.saveUser(user);
     }
 
@@ -167,5 +182,23 @@ public class ServerImpl implements Server {
     @Override
     public List<RideInfo> getRides() {
         return this.rides.stream().map(Ride::getInfo).toList();
+    }
+
+    @Override
+    public EBikeInfo updateEBike(EBikeInfo bikeInfo) throws IllegalArgumentException, RepositoryException {
+        var bikeOpt = bikes.stream().filter(b -> b.getId() == bikeInfo.bikeID()).findFirst();
+        if (bikeOpt == null) {
+            throw new IllegalArgumentException("Bike not found.");
+        }
+        var bike = bikeOpt.get();
+        bike.updateState(bikeInfo.state());
+        bike.updateLocation(bikeInfo.loc());
+        bike.updateDirection(bikeInfo.direction());
+        bike.updateSpeed(bikeInfo.speed());
+        bike.decreaseBatteryLevel(bike.getBatteryLevel() - bikeInfo.batteryLevel());
+
+        this.repository.saveEBike(bike);
+
+        return bike.getInfo();
     }
 }

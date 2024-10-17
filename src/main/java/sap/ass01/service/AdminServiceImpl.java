@@ -35,8 +35,8 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Override
-    public void notifyRideStepDone(String rideId, P2d bikePos, int batteryLevel, int userCredits, boolean rideEnded) {
-        this.adminGUICallback.notifyRideStepDone(rideId, bikePos.x(), bikePos.y(), batteryLevel, userCredits, rideEnded);
+    public void notifyRideStepDone(String rideId, P2d bikePos, int batteryLevel, int userCredits) {
+        this.adminGUICallback.notifyRideStepDone(rideId, bikePos.x(), bikePos.y(), batteryLevel, userCredits);
     }
 
     @Override

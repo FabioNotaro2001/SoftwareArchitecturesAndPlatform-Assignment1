@@ -44,12 +44,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public RideInfo beginRide(String userId, String bikeId) throws RemoteException, IllegalArgumentException {
+    public RideInfo beginRide(String userId, String bikeId) throws RemoteException, IllegalArgumentException, IllegalStateException, RepositoryException {
         return this.userAppService.beginRide(userId, bikeId);
     }
 
     @Override
-    public boolean endRide(String userId, String bikeId) throws RemoteException {
+    public boolean endRide(String userId, String bikeId) throws RemoteException, RepositoryException {
         try {
             this.userAppService.endRide(userId, bikeId);
         } catch (IllegalArgumentException e) {
@@ -79,7 +79,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void notifyRideStepDone(String rideId, P2d bikePos, int batteryLevel, int userCredits, boolean rideEnded) throws RemoteException {
-        this.userGUICallback.notifyRideStepDone(rideId, bikePos.x(), bikePos.y(), batteryLevel, userCredits, rideEnded);
+    public void notifyRideStepDone(String rideId, P2d bikePos, int batteryLevel, int userCredits) throws RemoteException {
+        this.userGUICallback.notifyRideStepDone(rideId, bikePos.x(), bikePos.y(), batteryLevel, userCredits);
     }
 }

@@ -5,10 +5,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+
 import sap.ass01.businessLogic.*;
 import sap.ass01.businessLogic.EBike.EBikeState;
 
-public class AppServiceImpl implements AdminAppService, UserAppService {
+public class AppServiceImpl implements AdminAppService, UserAppService, RideThreadObserver {
     private static final String USER_SERVER_NAME = "userServer";
     private static final String ADMIN_SERVER_NAME = "adminServer";
 
@@ -18,11 +21,16 @@ public class AppServiceImpl implements AdminAppService, UserAppService {
 
     private Server serverBL;
 
+    private Executor bikesExecutor;
+    private Map<String, RideThread> rideThreads; // userID -> thread 
+
     public AppServiceImpl(Server serverBL){
         this.serverBL = serverBL;
         this.adminListeners = new ArrayList<>();
         this.userListeners = new HashMap<>();
         this.ridesListeners = new HashMap<>();
+        this.bikesExecutor = Executors.newCachedThreadPool();
+        this.rideThreads = new HashMap<>();
     }
 
     @Override
@@ -44,7 +52,7 @@ public class AppServiceImpl implements AdminAppService, UserAppService {
     }
 
     @Override
-    public RideInfo beginRide(String userID, String bikeID) throws RemoteException, IllegalArgumentException {
+    public RideInfo beginRide(String userID, String bikeID) throws RemoteException, IllegalArgumentException, RepositoryException {
         RideInfo rideBegun = this.serverBL.beginRide(userID, bikeID);
         EBikeInfo bikeUsed = this.serverBL.getEBikeByID(bikeID);
 
@@ -52,13 +60,20 @@ public class AppServiceImpl implements AdminAppService, UserAppService {
         this.userListeners.values().forEach(LambdaUtil.wrap(u -> u.notifyBikeStateChanged(bikeID,  bikeUsed.state(), bikeUsed.loc().x(), bikeUsed.loc().y(), bikeUsed.batteryLevel())));
 
         this.ridesListeners.put(bikeID, this.userListeners.get(userID));
+
+        var thread = new RideThread(this, this.serverBL, rideBegun);
+        bikesExecutor.execute(thread);
+        rideThreads.put(userID, thread);
+
         return rideBegun;
     }
 
     @Override
-    public void endRide(String userID, String bikeID) throws RemoteException, IllegalArgumentException {
+    public void endRide(String userID, String bikeID) throws RemoteException, IllegalArgumentException, RepositoryException {
         this.serverBL.endRide(userID, bikeID);
         EBikeInfo bikeUsed = this.serverBL.getEBikeByID(bikeID);
+
+        rideThreads.remove(userID).endRide();
 
         this.adminListeners.forEach(LambdaUtil.wrap(a -> a.notifyBikeStateChanged(bikeID, bikeUsed.state(), bikeUsed.loc().x(), bikeUsed.loc().y(), bikeUsed.batteryLevel())));
         this.userListeners.values().forEach(LambdaUtil.wrap(u -> u.notifyBikeStateChanged(bikeID,  bikeUsed.state(), bikeUsed.loc().x(), bikeUsed.loc().y(), bikeUsed.batteryLevel())));
@@ -104,5 +119,22 @@ public class AppServiceImpl implements AdminAppService, UserAppService {
     @Override
     public List<RideInfo> getRides() throws RemoteException {
         return this.serverBL.getRides();
+    }
+
+    @Override
+    public void bikeStateChanged(String bikeID, EBikeState newState, double x, double y, int batteryLevel) {
+        this.adminListeners.forEach(LambdaUtil.wrap(a -> a.notifyBikeStateChanged(bikeID, newState, x, y, batteryLevel)));
+        this.userListeners.values().forEach(LambdaUtil.wrap(u -> u.notifyBikeStateChanged(bikeID, newState, x, y, batteryLevel)));
+    }
+
+    @Override
+    public void rideStepDone(String bikeID, String rideID, P2d bikePos, int batteryLevel, int userCredits) {
+        this.adminListeners.forEach(LambdaUtil.wrap(a -> a.notifyRideStepDone(rideID, bikePos, batteryLevel, userCredits)));
+        try {
+            this.ridesListeners.get(bikeID).notifyRideStepDone(rideID, bikePos, batteryLevel, userCredits);
+        } catch (RemoteException e) {   // Unreachable GUIs are removed.
+            System.out.println("Unreachable user GUI.");
+            this.ridesListeners.remove(bikeID);
+        }
     }
 }

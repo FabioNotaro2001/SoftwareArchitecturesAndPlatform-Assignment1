@@ -1,6 +1,8 @@
 package sap.ass01.presentation;
 
 import javax.swing.*;
+
+import sap.ass01.businessLogic.RepositoryException;
 import sap.ass01.service.UserService;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -15,7 +17,6 @@ import java.util.Vector;
  */
 public class RideDialog extends JDialog {
     private JComboBox<String> bikesComboBox;
-    private JTextField userName;
     private JButton startButton;
     private JButton cancelButton;
     private UserGUI fatherUserGUI;
@@ -24,7 +25,7 @@ public class RideDialog extends JDialog {
     private String bikeSelectedID;
     private UserService userService;
 
-    public RideDialog(UserGUI fatherUserGUI, UserService userService) throws RemoteException {
+    public RideDialog(UserGUI fatherUserGUI, String user, UserService userService) throws RemoteException {
         super(fatherUserGUI, "Start Riding an EBike", true);
         this.userService = userService;
         this.availableBikes = this.userService.getAvailableBikes().stream().map(b -> b.bikeID()).toList();
@@ -34,11 +35,11 @@ public class RideDialog extends JDialog {
         addEventHandlers();
         setLocationRelativeTo(fatherUserGUI);
         this.fatherUserGUI = fatherUserGUI;
+        this.userRiding = user;
     }
 
     private void initializeComponents() {
         bikesComboBox = new JComboBox<String>(new Vector<>(this.availableBikes));
-        userName = new JTextField(15);
         startButton = new JButton("Start Riding");
         cancelButton = new JButton("Cancel");
     }
@@ -62,11 +63,10 @@ public class RideDialog extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 bikeSelectedID =  bikesComboBox.getSelectedItem().toString();
-	            userRiding = userName.getText();
-	            cancelButton.setEnabled(false);
+                cancelButton.setEnabled(false);
                 try {
                     fatherUserGUI.setLaunchedRide(userService.beginRide(userRiding, bikeSelectedID));
-                } catch (RemoteException e1) {
+                } catch (RemoteException | IllegalArgumentException | IllegalStateException | RepositoryException e1) {
                     e1.printStackTrace();
                 }
 	            dispose();
