@@ -71,11 +71,4 @@ public class AddUserDialog extends JDialog {
             }
         });
     }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            AddUserDialog dialog = new AddUserDialog(null);
-            dialog.setVisible(true);
-        });
-    }
 }

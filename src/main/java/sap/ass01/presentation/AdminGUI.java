@@ -223,12 +223,7 @@ public class AdminGUI extends JFrame implements ActionListener, AdminGUICallback
             repaint();
         }
     }
-	
-	// TODO: per far passare i test o spostare i main fuori da questo package o cambiare tutti i costruttori.
-	public static void main(String[] args) throws RemoteException, RepositoryException {
-		var w = new AdminGUI(new AdminServiceImpl(new AppServiceImpl(new ServerImpl(new MyRepoPersistence()))));
-		w.display();
-	}
+
 
 
 	@Override
@@ -270,6 +265,8 @@ public class AdminGUI extends JFrame implements ActionListener, AdminGUICallback
 
 		var newBike = new EBikeInfo(ride.bikeID(), bike.state(), new P2d(x, y), bike.direction(), bike.speed(), batteryLevel);
 		addOrReplaceEBike(newBike);
+
+		centralPanel.refresh();
 	}
 
 

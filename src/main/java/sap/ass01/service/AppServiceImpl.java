@@ -12,17 +12,17 @@ import sap.ass01.businessLogic.*;
 import sap.ass01.businessLogic.EBike.EBikeState;
 
 public class AppServiceImpl implements AdminAppService, UserAppService, RideThreadObserver {
-    private static final String USER_SERVER_NAME = "userServer";
-    private static final String ADMIN_SERVER_NAME = "adminServer";
+    public static final String USER_SERVER_NAME = "userServer";
+    public static final String ADMIN_SERVER_NAME = "adminServer";
 
     private transient List<AdminCallback> adminListeners;
     private transient Map<String, UserCallback> userListeners;  // userID -> callback.
     private transient Map<String, UserCallback> ridesListeners; // bikeID -> callback.
 
-    private Server serverBL;
+    private transient Server serverBL;
 
-    private Executor bikesExecutor;
-    private Map<String, RideThread> rideThreads; // userID -> thread 
+    private transient Executor bikesExecutor;
+    private transient Map<String, RideThread> rideThreads; // userID -> thread 
 
     public AppServiceImpl(Server serverBL){
         this.serverBL = serverBL;

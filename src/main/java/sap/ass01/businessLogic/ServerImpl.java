@@ -1,14 +1,11 @@
 package sap.ass01.businessLogic;
 
-import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import sap.ass01.businessLogic.EBike.EBikeState;
-import sap.ass01.persistence.MyRepoPersistence;
 
 // TODO: batteria delle bici deve ricaricarsi (thread?)
 
@@ -139,25 +136,6 @@ public class ServerImpl implements Server {
         this.repository.saveUser(user);
 
         return user.getInfo();
-    }
-
-    public static void main(String[] args) throws RepositoryException {
-        try {
-            ServerImpl server = new ServerImpl(new MyRepoPersistence());
-
-            // Esporta l'oggetto server per renderlo disponibile alle chiamate remote.
-            //UserAppService userServerStub = (UserAppService) UnicastRemoteObject.exportObject(server, 0);
-            //AdminAppService adminServerStub = (AdminAppService) UnicastRemoteObject.exportObject(server, 0);
-            // Ottiene il registro RMI.
-            Registry registry = LocateRegistry.getRegistry();
-
-            // Associa (rebind) il nome del server al serverStub nel registro RMI.
-            //registry.rebind(USER_SERVER_NAME, userServerStub);
-            //registry.rebind(ADMIN_SERVER_NAME, adminServerStub);
-            System.out.println("Server created.");
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override

@@ -2,9 +2,6 @@ package sap.ass01.businessLogic;
 
 import java.util.Date;
 import java.util.Optional;
-import sap.ass01.bbom.RideSimulation;
-import sap.ass01.bbom.RideSimulationControlPanel;
-import sap.ass01.presentation.AdminGUI;
 
 public class Ride {
 	private Date startedDate;
@@ -13,7 +10,6 @@ public class Ride {
 	private EBike ebike;
 	private boolean ongoing;
 	private String id;
-	private RideSimulation rideSimulation;
 	
 	public Ride(String id, User user, EBike ebike) {
 		this.id = id;
@@ -23,22 +19,8 @@ public class Ride {
 		this.ebike = ebike;
 	}
 	
-	public synchronized String getId() {
+	public String getId() {
 		return id;
-	}
-
-	public void start(AdminGUI app) { 
-		ongoing = true;
-        rideSimulation = new RideSimulation(this, user, app);
-        RideSimulationControlPanel ridingWindow = new RideSimulationControlPanel(this, app);
-        ridingWindow.display();
-        rideSimulation.start();
-	}
-	
-	public void end() {				
-		endDate = Optional.of(new Date());
-		ongoing = false;
-		rideSimulation.stopSimulation();
 	}
 
 	public Date getStartedDate() {

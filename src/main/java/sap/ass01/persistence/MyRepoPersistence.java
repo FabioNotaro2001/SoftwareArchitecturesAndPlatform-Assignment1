@@ -9,7 +9,7 @@ import java.util.Optional;
 import io.vertx.core.json.JsonObject;
 import sap.ass01.businessLogic.*;
 import sap.ass01.businessLogic.EBike.EBikeState;
-import sap.ass01.presentation.UserGUI;
+
 
 public class MyRepoPersistence implements RepositoryInterface {
 
@@ -167,18 +167,5 @@ public class MyRepoPersistence implements RepositoryInterface {
 				throw new RepositoryException();
 			}
 		}
-	}
-
-	public static void main(String[] args) throws RepositoryException {
-		MyRepoPersistence pippo = new MyRepoPersistence();
-		pippo.init();
-		User usr = new User("HelloAMICO", 120);
-		User usr2 = new User("HelloAMICO2", 90);
-		pippo.saveUser(usr);
-		pippo.saveUser(usr2);
-		EBike eBike = new EBike("CIAO");
-		pippo.saveEBike(eBike);
-		System.out.println(pippo.getEBikeByID("CIAO"));
-		System.out.println(pippo.getUsers());
 	}
 }

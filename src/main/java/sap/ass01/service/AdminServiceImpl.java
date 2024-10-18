@@ -11,12 +11,12 @@ import sap.ass01.businessLogic.UserInfo;
 import sap.ass01.presentation.AdminGUICallback;
 
 public class AdminServiceImpl implements AdminService{
-    private AdminAppService adminAppService;
-    private AdminGUICallback adminGUICallback;
+    private transient AdminAppService adminAppService;
+    private transient AdminGUICallback adminGUICallback;
 
     public AdminServiceImpl(AdminAppService adminAppService) throws RemoteException{
         this.adminAppService = adminAppService;
-        this.adminAppService.registerAdmin(this);
+        //this.adminAppService.registerAdmin(this);
     }
 
     @Override

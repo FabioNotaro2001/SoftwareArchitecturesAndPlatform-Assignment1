@@ -11,8 +11,8 @@ import sap.ass01.businessLogic.UserInfo;
 import sap.ass01.presentation.UserGUICallback;
 
 public class UserServiceImpl implements UserService {
-    private UserAppService userAppService;
-    private UserGUICallback userGUICallback;
+    private transient UserAppService userAppService;
+    private transient UserGUICallback userGUICallback;
 
     public UserServiceImpl(UserAppService userAppService) {
         this.userAppService = userAppService;

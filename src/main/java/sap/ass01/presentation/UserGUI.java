@@ -209,11 +209,6 @@ public class UserGUI extends JFrame implements ActionListener, UserGUICallback {
             registerDialog.setVisible(true);
         }
     }
-    
-    public static void main(String[] args) throws RepositoryException, RemoteException {
-		var w = new UserGUI(new UserServiceImpl(new AppServiceImpl(new ServerImpl(new MyRepoPersistence()))));
-        w.display();
-	}
 
 	@Override
 	public void notifyBikeStateChanged(String bikeID, EBikeState state, double x, double y, int batteryLevel) {
