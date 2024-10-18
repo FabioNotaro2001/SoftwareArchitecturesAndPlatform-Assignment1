@@ -231,7 +231,7 @@ public class AdminGUI extends JFrame implements ActionListener, AdminGUICallback
 		EBikeInfo eBikeInfo = null;
 		var bike = this.bikes.get(bikeID);
 		if(bike == null){
-			eBikeInfo = new EBikeInfo(bikeID, state, new P2d(x, y), new V2d(-1,0), 0, batteryLevel);
+			eBikeInfo = new EBikeInfo(bikeID, state, new P2d(x, y), new V2d(-1,0), 0.0, batteryLevel);
 		} else {
 			eBikeInfo = new EBikeInfo(bikeID, state, new P2d(x, y), bike.direction(), y, batteryLevel);
 		}

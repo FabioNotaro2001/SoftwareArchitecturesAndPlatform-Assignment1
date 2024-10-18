@@ -17,7 +17,7 @@ public interface AdminService extends AdminCallback {
      * Registers the GUI so that application events can be forwarded. 
      * @param callback callback to the admin GUI
      */
-    void registerGUI(AdminGUICallback callback);
+    void registerGUI(AdminGUICallback callback) throws RemoteException;
 
     /**
      * Attempts to add a new ebike.

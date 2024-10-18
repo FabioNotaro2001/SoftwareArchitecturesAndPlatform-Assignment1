@@ -1,5 +1,7 @@
 package sap.ass01.businessLogic;
 
-public record UserInfo(String userID, int credits) {
+import java.io.Serializable;
+
+public record UserInfo(String userID, int credits) implements Serializable {
 
 }

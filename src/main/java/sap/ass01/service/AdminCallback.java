@@ -1,5 +1,7 @@
 package sap.ass01.service;
 
+import java.rmi.RemoteException;
+
 /**
  * Interface for notifying about admin events.
  */
@@ -9,5 +11,5 @@ public interface AdminCallback extends UserCallback {
      * @param userID the user's id
      * @param credits the user's credit
      */
-    void notifyUserCreated(String userID, int credits);
+    void notifyUserCreated(String userID, int credits) throws RemoteException;
 }

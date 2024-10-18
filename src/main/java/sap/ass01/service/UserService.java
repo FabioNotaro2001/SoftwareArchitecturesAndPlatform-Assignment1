@@ -17,7 +17,7 @@ public interface UserService extends UserCallback {
      * Registers the GUI so that application events can be forwarded.
      * @param callback callback to the user GUI
      */
-    void registerGUI(UserGUICallback callback);
+    void registerGUI(UserGUICallback callback) throws RemoteException;
 
     /**
      * Returns all available users.

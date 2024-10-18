@@ -49,7 +49,7 @@ public class UserGUI extends JFrame implements ActionListener, UserGUICallback {
         setupView();
     }
 
-    protected void setupModel() {
+    protected void setupModel() throws RemoteException {
         this.userService.registerGUI(this);
     }
 

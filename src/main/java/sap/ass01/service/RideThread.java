@@ -36,7 +36,7 @@ public class RideThread extends Thread {
                 if (!ongoing) {
                     try {
                         bikeInfo = serverBL.getEBikeByID(rideInfo.bikeID());
-                        serverBL.updateEBike(new EBikeInfo(bikeInfo.bikeID(), bikeInfo.state(), bikeInfo.loc(), bikeInfo.direction(), 0, bikeInfo.batteryLevel()));
+                        serverBL.updateEBike(new EBikeInfo(bikeInfo.bikeID(), bikeInfo.state(), bikeInfo.loc(), bikeInfo.direction(), 0.0, bikeInfo.batteryLevel()));
                     } catch (IllegalArgumentException | RepositoryException e) {
                         e.printStackTrace();
                     }
@@ -105,7 +105,7 @@ public class RideThread extends Thread {
             this.observer.rideStepDone(bikeInfo.bikeID(), rideInfo.rideId(), newLoc, newBatteryLevel, newUserCredits);
 
             try {
-                serverBL.updateEBike(new EBikeInfo(bikeInfo.bikeID(), bikeInfo.state(), newLoc, newDir, 1, newBatteryLevel));
+                serverBL.updateEBike(new EBikeInfo(bikeInfo.bikeID(), bikeInfo.state(), newLoc, newDir, 1.0, newBatteryLevel));
             } catch (IllegalArgumentException | RepositoryException e) {
                 e.printStackTrace();
                 break;
@@ -123,7 +123,7 @@ public class RideThread extends Thread {
         }
 
         try {
-            serverBL.updateEBike(new EBikeInfo(bikeInfo.bikeID(), bikeInfo.batteryLevel() > 0 ? EBikeState.AVAILABLE : EBikeState.MAINTENANCE, bikeInfo.loc(), bikeInfo.direction(), 0, bikeInfo.batteryLevel()));
+            serverBL.updateEBike(new EBikeInfo(bikeInfo.bikeID(), bikeInfo.batteryLevel() > 0 ? EBikeState.AVAILABLE : EBikeState.MAINTENANCE, bikeInfo.loc(), bikeInfo.direction(), 0.0, bikeInfo.batteryLevel()));
         } catch (IllegalArgumentException | RepositoryException e) {
             e.printStackTrace();
         }

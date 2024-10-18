@@ -1,5 +1,7 @@
 package sap.ass01.businessLogic;
 
-public record RideInfo(String rideId, String userID, String bikeID, boolean ongoing) {
+import java.io.Serializable;
+
+public record RideInfo(String rideId, String userID, String bikeID, boolean ongoing) implements Serializable {
 
 }

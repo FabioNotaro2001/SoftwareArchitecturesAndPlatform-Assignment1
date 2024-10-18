@@ -26,7 +26,7 @@ public class MainAdmin {
     
     AdminService adminService = new AdminServiceImpl(adminAppService); 
 
-    AdminCallback adminServiceStub = (AdminCallback) UnicastRemoteObject.exportObject(adminService, 0);
+    AdminCallback adminServiceStub = (AdminCallback) UnicastRemoteObject.exportObject((AdminCallback) adminService, 0);
 
     adminAppService.registerAdmin(adminServiceStub);
 

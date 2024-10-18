@@ -61,7 +61,7 @@ public class EBike  {
 	}
 	
 	public boolean isAvailable() {
-		return state.equals(EBikeState.AVAILABLE);
+		return state == EBikeState.AVAILABLE;
 	}
 
 	public void updateState(EBikeState state) {

@@ -47,7 +47,7 @@ public class AppServiceImpl implements AdminAppService, UserAppService, RideThre
     public UserInfo createUser(String userID, int credits)
             throws RemoteException, IllegalArgumentException, RepositoryException {
         UserInfo userCreated = this.serverBL.createUser(userID, credits);
-        this.adminListeners.forEach(a -> a.notifyUserCreated(userID, credits));
+        this.adminListeners.forEach(LambdaUtil.wrap(a -> a.notifyUserCreated(userID, credits)));
         return userCreated;
     }
 
@@ -129,7 +129,7 @@ public class AppServiceImpl implements AdminAppService, UserAppService, RideThre
 
     @Override
     public void rideStepDone(String bikeID, String rideID, P2d bikePos, int batteryLevel, int userCredits) {
-        this.adminListeners.forEach(LambdaUtil.wrap(a -> a.notifyRideStepDone(rideID, bikePos, batteryLevel, userCredits)));
+        this.adminListeners.forEach(LambdaUtil.wrap(a -> a.notifyRideStepDone(rideID, bikePos, batteryLevel, userCredits))); // FIXME: nullpointerexception
         try {
             this.ridesListeners.get(bikeID).notifyRideStepDone(rideID, bikePos, batteryLevel, userCredits);
         } catch (RemoteException e) {   // Unreachable GUIs are removed.
