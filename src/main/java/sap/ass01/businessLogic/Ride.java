@@ -8,7 +8,6 @@ public class Ride {
 	private Optional<Date> endDate;
 	private User user;
 	private EBike ebike;
-	private boolean ongoing;
 	private String id;
 	
 	public Ride(String id, User user, EBike ebike) {
@@ -26,10 +25,6 @@ public class Ride {
 	public Date getStartedDate() {
 		return startedDate;
 	}
-
-	public boolean isOngoing() {	
-		return this.ongoing;
-	}
 	
 	public Optional<Date> getEndDate() {
 		return endDate;
@@ -44,7 +39,7 @@ public class Ride {
 	}
 
 	public RideInfo getInfo(){
-		return new RideInfo(this.id, this.user.getId(), this.ebike.getId(), this.ongoing);
+		return new RideInfo(this.id, this.user.getId(), this.ebike.getId(), true);
 	}
 	
 	public String toString() {

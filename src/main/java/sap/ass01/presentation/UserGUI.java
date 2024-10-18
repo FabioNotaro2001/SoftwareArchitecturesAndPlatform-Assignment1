@@ -5,19 +5,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.rmi.RemoteException;
-import java.util.List;
 import java.util.Vector;
 import javax.swing.*;
 import java.awt.*;
 import sap.ass01.businessLogic.RepositoryException;
 import sap.ass01.businessLogic.RideInfo;
-import sap.ass01.businessLogic.ServerImpl;
 import sap.ass01.businessLogic.UserInfo;
 import sap.ass01.businessLogic.EBike.EBikeState;
-import sap.ass01.persistence.MyRepoPersistence;
-import sap.ass01.service.AppServiceImpl;
 import sap.ass01.service.UserService;
-import sap.ass01.service.UserServiceImpl;
 
 public class UserGUI extends JFrame implements ActionListener, UserGUICallback {
     // TODO: ha senso che l'utente possa vedere in tempo reale il suo credito che scende e la batteria della bici che sta usando.
@@ -134,7 +129,6 @@ public class UserGUI extends JFrame implements ActionListener, UserGUICallback {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == startRideButton) {
-            this.startRideButton.setEnabled(false);
             JDialog d;
             try {
                 d = new RideDialog(this, this.userConnected.userID(), this.userService);
@@ -212,7 +206,7 @@ public class UserGUI extends JFrame implements ActionListener, UserGUICallback {
 
 	@Override
 	public void notifyBikeStateChanged(String bikeID, EBikeState state, double x, double y, int batteryLevel) {
-        if (launchedRide == null || launchedRide.bikeID() != bikeID) {
+        if (launchedRide == null || !launchedRide.bikeID().equals(bikeID)) {
             return;
         }
 
@@ -255,6 +249,7 @@ public class UserGUI extends JFrame implements ActionListener, UserGUICallback {
 
     public void setLaunchedRide(RideInfo newRide){
         this.launchedRide = newRide;
+        this.startRideButton.setEnabled(false);
         this.endRideButton.setEnabled(true);
     }
 }

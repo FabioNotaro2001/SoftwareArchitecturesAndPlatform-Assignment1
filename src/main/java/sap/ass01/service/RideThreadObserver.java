@@ -4,7 +4,7 @@ import sap.ass01.businessLogic.EBike;
 import sap.ass01.businessLogic.P2d;
 
 public interface RideThreadObserver {
-    void bikeStateChanged(String bikeID, EBike.EBikeState newState, double x, double y, int batteryLevel);
+    void rideEnded(String rideId, String userID, String bikeID, EBike.EBikeState newState, double x, double y, int batteryLevel);
 
     void rideStepDone(String bikeID, String rideID, P2d bikePos, int batteryLevel, int userCredits);
 }

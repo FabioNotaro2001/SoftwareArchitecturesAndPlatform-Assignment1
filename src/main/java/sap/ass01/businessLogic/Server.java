@@ -19,9 +19,11 @@ public interface Server {
 
     public List<RideInfo> getRides();
 
+    public RideInfo getRideForUser(String userID) throws IllegalArgumentException, RepositoryException;
+
     public RideInfo beginRide(String userID, String bikeID) throws IllegalArgumentException, RepositoryException;
 
-    public void endRide(String userID, String bikeID) throws IllegalArgumentException, RepositoryException;
+    public RideInfo endRide(String userID, String bikeID) throws IllegalArgumentException, RepositoryException;
 
     public UserInfo createUser(String userID, int credits) throws IllegalArgumentException, RepositoryException;
 

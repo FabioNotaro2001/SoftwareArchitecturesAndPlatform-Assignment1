@@ -2,7 +2,6 @@ package sap.ass01.presentation;
 
 import javax.swing.*;
 
-import sap.ass01.businessLogic.P2d;
 import sap.ass01.businessLogic.RepositoryException;
 import sap.ass01.service.AdminService;
 

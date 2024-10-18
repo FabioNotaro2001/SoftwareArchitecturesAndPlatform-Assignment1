@@ -133,7 +133,8 @@ public class RideThread extends Thread {
         } catch (IllegalArgumentException | RepositoryException e) {
             e.printStackTrace();
         }
-        observer.bikeStateChanged(bikeInfo.bikeID(), bikeInfo.batteryLevel() > 0 ? EBikeState.AVAILABLE : EBikeState.MAINTENANCE, bikeInfo.loc().x(), bikeInfo.loc().y(), bikeInfo.batteryLevel());
+        observer.rideEnded(rideInfo.rideId(), rideInfo.userID(), bikeInfo.bikeID(), bikeInfo.batteryLevel() > 0 ? EBikeState.AVAILABLE : EBikeState.MAINTENANCE, 
+                                    bikeInfo.loc().x(), bikeInfo.loc().y(), bikeInfo.batteryLevel());
     }
 
     public synchronized void endRide() {

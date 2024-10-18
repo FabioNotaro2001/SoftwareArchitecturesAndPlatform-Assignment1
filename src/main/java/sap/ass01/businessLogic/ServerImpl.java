@@ -36,7 +36,7 @@ public class ServerImpl implements Server {
 
     @Override
     public EBikeInfo addEBike(String bikeID, P2d pos) throws RepositoryException {
-        EBike bike = new EBike(bikeID, pos);
+        EBike bike = new EBike(bikeID, EBikeState.AVAILABLE, pos, new V2d(1, 0), 0, 100);
         this.bikes.add(bike);
         this.repository.saveEBike(bike);
         return bike.getInfo();
@@ -74,7 +74,7 @@ public class ServerImpl implements Server {
     }
 
     @Override
-    public void endRide(String userID, String bikeID) throws IllegalArgumentException, RepositoryException {
+    public RideInfo endRide(String userID, String bikeID) throws IllegalArgumentException, RepositoryException {
         var userOpt = this.users.stream().filter(u -> u.getId().equals(userID)).findFirst();
         var bikeOpt = this.bikes.stream().filter(b -> b.getId().equals(bikeID)).findFirst();
         if (userOpt.isEmpty()) {
@@ -86,9 +86,6 @@ public class ServerImpl implements Server {
 
         var user = userOpt.get();
         var bike = bikeOpt.get();
-        bike.updateState(bike.getBatteryLevel() > 0 ? EBikeState.AVAILABLE : EBikeState.MAINTENANCE);
-        bike.updateSpeed(0);
-        updateEBike(bike.getInfo());
 
         var rideOpt = this.rides.stream().filter(r -> r.getEBike() == bike).findFirst();
         if (rideOpt.isEmpty()) {
@@ -99,6 +96,13 @@ public class ServerImpl implements Server {
         if(ride.getUser() != user) {
             throw new IllegalArgumentException("The given user is not riding the bike");
         }
+
+        bike.updateState(bike.getBatteryLevel() > 0 ? EBikeState.AVAILABLE : EBikeState.MAINTENANCE);
+        bike.updateSpeed(0);
+        updateEBike(bike.getInfo());
+
+        this.rides.remove(ride);
+        return ride.getInfo().setOngoing(false);
     }
 
     @Override
@@ -160,6 +164,15 @@ public class ServerImpl implements Server {
     @Override
     public List<RideInfo> getRides() {
         return this.rides.stream().map(Ride::getInfo).toList();
+    }
+
+    @Override
+    public RideInfo getRideForUser(String userID) throws IllegalArgumentException, RepositoryException {
+        var ride = this.rides.stream().filter(r -> r.getUser().getId().equals(userID)).findFirst();
+        if (ride.isEmpty()) {
+            throw new IllegalArgumentException("Ride for user '" + userID + "' does not exist");
+        }
+        return ride.get().getInfo();
     }
 
     @Override

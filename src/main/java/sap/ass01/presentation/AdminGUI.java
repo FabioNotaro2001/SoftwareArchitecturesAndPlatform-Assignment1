@@ -16,16 +16,11 @@ import java.util.Map;
 import javax.swing.*;
 import sap.ass01.businessLogic.EBikeInfo;
 import sap.ass01.businessLogic.P2d;
-import sap.ass01.businessLogic.RepositoryException;
 import sap.ass01.businessLogic.RideInfo;
-import sap.ass01.businessLogic.ServerImpl;
 import sap.ass01.businessLogic.UserInfo;
 import sap.ass01.businessLogic.V2d;
 import sap.ass01.businessLogic.EBike.EBikeState;
-import sap.ass01.persistence.MyRepoPersistence;
 import sap.ass01.service.AdminService;
-import sap.ass01.service.AdminServiceImpl;
-import sap.ass01.service.AppServiceImpl;
 
 public class AdminGUI extends JFrame implements ActionListener, AdminGUICallback {
 	private AdminService adminService;
@@ -224,18 +219,21 @@ public class AdminGUI extends JFrame implements ActionListener, AdminGUICallback
         }
     }
 
-
-
 	@Override
 	public void notifyBikeStateChanged(String bikeID, EBikeState state, double x, double y, int batteryLevel) {
 		EBikeInfo eBikeInfo = null;
 		var bike = this.bikes.get(bikeID);
-		if(bike == null){
-			eBikeInfo = new EBikeInfo(bikeID, state, new P2d(x, y), new V2d(-1,0), 0.0, batteryLevel);
-		} else {
-			eBikeInfo = new EBikeInfo(bikeID, state, new P2d(x, y), bike.direction(), y, batteryLevel);
+
+		if (state == EBikeState.DISMISSED) {
+			removeEBike(bikeID);
+		} else {	
+			if(bike == null){
+				eBikeInfo = new EBikeInfo(bikeID, state, new P2d(x, y), new V2d(-1,0), 0.0, batteryLevel);
+			} else {
+				eBikeInfo = new EBikeInfo(bikeID, state, new P2d(x, y), bike.direction(), y, batteryLevel);
+			}
+			addOrReplaceEBike(eBikeInfo);
 		}
-		addOrReplaceEBike(eBikeInfo);
 
 		if (state != EBikeState.IN_USE) {
 			var ride = rides.values().stream().filter(r -> r.bikeID() == bikeID).findFirst();
@@ -254,10 +252,22 @@ public class AdminGUI extends JFrame implements ActionListener, AdminGUICallback
 		addOrReplaceUser(newUserInfo);
 	}
 
+	@Override
+	public void notifyRideUpdate(RideInfo rideInfo) {
+		if (rideInfo.ongoing()) {
+			addOrReplaceRide(rideInfo);
+		} else {
+			removeRide(rideInfo.rideId());
+		}
+	}
 
 	@Override
 	public void notifyRideStepDone(String rideId, double x, double y, int batteryLevel, int userCredits) {
 		var ride = rides.get(rideId);
+		if (ride == null) {
+			return;
+		}
+
 		var bike = bikes.get(ride.bikeID());
 
 		var newUser = new UserInfo(ride.userID(), userCredits);
