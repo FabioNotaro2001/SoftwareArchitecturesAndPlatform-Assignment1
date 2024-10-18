@@ -4,10 +4,7 @@ package sap.ass01.businessLogic;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import sap.ass01.businessLogic.EBike.EBikeState;
-
-// TODO: batteria delle bici deve ricaricarsi (thread?)
 
 public class ServerImpl implements Server {
     private RepositoryInterface repository;
@@ -159,7 +156,6 @@ public class ServerImpl implements Server {
         } 
         return targetBike.get().getInfo();
     }
-    // TODO: i thread vanno nel business logic o nel service? Rifletterci. Forse ha senso metterli nel service.
 
     @Override
     public List<RideInfo> getRides() {

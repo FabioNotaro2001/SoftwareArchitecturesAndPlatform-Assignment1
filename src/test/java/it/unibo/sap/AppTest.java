@@ -15,7 +15,7 @@ public class AppTest {
      */
     @Test
     public void architecturalDependenciesTest() {
-        JavaClasses importedClasses = new ClassFileImporter().importPackages("sap.ass01");
+        JavaClasses importedClasses = new ClassFileImporter().importPackages("sap.ass01.presentation", "sap.ass01.service", "sap.ass01.businessLogic", "sap.ass01.persistence");
 
 
         // Layered architecture definition.
@@ -27,13 +27,13 @@ public class AppTest {
             
 
             // Access rules between layers.
-            .whereLayer("presentation").mayOnlyBeAccessedByLayers("service") // Due to the callbacks.
+            .whereLayer("presentation").mayNotBeAccessedByAnyLayer()
             .whereLayer("service").mayOnlyBeAccessedByLayers("presentation") 
 
             // Strange case: in our implementation businessLogic can be accssed also by presentation layer becuase of EBikeInfo, UserInfo...
             // TODO: layer presentation è definito come layer aperto perchè prende la tipologia di dato INFOBIKE direttamenta dal business saltando il layer presentation
-            .whereLayer("businessLogic").mayOnlyBeAccessedByLayers("service", "presentation", "persistence")
-            .whereLayer("persistence").mayOnlyAccessLayers("businessLogic") 
+            .whereLayer("businessLogic").mayOnlyBeAccessedByLayers("service", "persistence", "presentation")
+            .whereLayer("persistence").mayOnlyBeAccessedByLayers("businessLogic") 
             .check(importedClasses);
     }
 }

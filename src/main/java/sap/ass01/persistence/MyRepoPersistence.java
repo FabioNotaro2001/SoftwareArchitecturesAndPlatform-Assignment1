@@ -5,7 +5,6 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import io.vertx.core.json.JsonObject;
 import sap.ass01.businessLogic.*;
 import sap.ass01.businessLogic.EBike.EBikeState;

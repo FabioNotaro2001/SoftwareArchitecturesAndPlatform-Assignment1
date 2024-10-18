@@ -1,8 +1,6 @@
-package sap.ass01.service;
+package sap.ass01.businessLogic;
 
 import java.rmi.RemoteException;
-
-import sap.ass01.businessLogic.RideInfo;
 
 /**
  * Interface for notifying about admin events.

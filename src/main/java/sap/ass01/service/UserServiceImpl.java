@@ -8,7 +8,6 @@ import sap.ass01.businessLogic.P2d;
 import sap.ass01.businessLogic.RepositoryException;
 import sap.ass01.businessLogic.RideInfo;
 import sap.ass01.businessLogic.UserInfo;
-import sap.ass01.presentation.UserGUICallback;
 
 public class UserServiceImpl implements UserService {
     private transient UserAppService userAppService;

@@ -20,6 +20,7 @@ import sap.ass01.businessLogic.RideInfo;
 import sap.ass01.businessLogic.UserInfo;
 import sap.ass01.businessLogic.V2d;
 import sap.ass01.businessLogic.EBike.EBikeState;
+import sap.ass01.service.AdminGUICallback;
 import sap.ass01.service.AdminService;
 
 public class AdminGUI extends JFrame implements ActionListener, AdminGUICallback {

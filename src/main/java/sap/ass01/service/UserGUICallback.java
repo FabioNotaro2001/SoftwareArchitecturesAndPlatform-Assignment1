@@ -1,4 +1,4 @@
-package sap.ass01.presentation;
+package sap.ass01.service;
 
 import sap.ass01.businessLogic.EBike.EBikeState;
 

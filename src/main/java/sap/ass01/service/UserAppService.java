@@ -3,6 +3,7 @@ package sap.ass01.service;
 import java.rmi.RemoteException;
 import sap.ass01.businessLogic.RepositoryException;
 import sap.ass01.businessLogic.RideInfo;
+import sap.ass01.businessLogic.UserCallback;
 import sap.ass01.businessLogic.UserInfo;
 
 /**

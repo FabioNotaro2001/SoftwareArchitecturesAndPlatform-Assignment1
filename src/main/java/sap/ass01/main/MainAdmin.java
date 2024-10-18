@@ -1,9 +1,9 @@
 package sap.ass01.main;
 
+import sap.ass01.businessLogic.AdminCallback;
 import sap.ass01.businessLogic.RepositoryException;
 import sap.ass01.presentation.AdminGUI;
 import sap.ass01.service.AdminAppService;
-import sap.ass01.service.AdminCallback;
 import sap.ass01.service.AdminService;
 import sap.ass01.service.AdminServiceImpl;
 import sap.ass01.service.AppServiceImpl;

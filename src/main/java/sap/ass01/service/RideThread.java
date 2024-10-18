@@ -56,17 +56,17 @@ public class RideThread extends Thread {
 			if (newLoc.x() > 200 || newLoc.x() < -200) {
 				newDir = new V2d(-d.x(), d.y());
 				if (newLoc.x() > 200) {
-					newLoc = new P2d(200, l.y()); // FIXME: dubbio
+					newLoc = new P2d(200, l.y()); 
 				} else {
-					newLoc = new P2d(-200, l.y());  // FIXME: dubbio
+					newLoc = new P2d(-200, l.y());  
 				}
 			};
 			if (newLoc.y() > 200 || newLoc.y() < -200) {
 				newDir = new V2d(d.x(), -d.y());
 				if (newLoc.y() > 200) {
-					newLoc = new P2d(l.x(), 200);   // FIXME: dubbio
+					newLoc = new P2d(l.x(), 200);   
 				} else {
-					newLoc = new P2d(l.x(), -200);  // FIXME: dubbio
+					newLoc = new P2d(l.x(), -200);  
 				}
 			};
 			

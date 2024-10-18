@@ -12,10 +12,10 @@ import sap.ass01.businessLogic.RepositoryException;
 import sap.ass01.businessLogic.RideInfo;
 import sap.ass01.businessLogic.UserInfo;
 import sap.ass01.businessLogic.EBike.EBikeState;
+import sap.ass01.service.UserGUICallback;
 import sap.ass01.service.UserService;
 
 public class UserGUI extends JFrame implements ActionListener, UserGUICallback {
-    // TODO: ha senso che l'utente possa vedere in tempo reale il suo credito che scende e la batteria della bici che sta usando.
 
     private UserService userService;
     
@@ -158,7 +158,6 @@ public class UserGUI extends JFrame implements ActionListener, UserGUICallback {
                 userCreditLabel.setText("Credit: " + this.userConnected.credits());
                 this.pack();
             } catch (RemoteException e1) {
-                // TODO Auto-generated catch block
                 e1.printStackTrace();
             }
 

@@ -6,8 +6,8 @@ import java.util.List;
 import sap.ass01.businessLogic.EBikeInfo;
 import sap.ass01.businessLogic.RepositoryException;
 import sap.ass01.businessLogic.RideInfo;
+import sap.ass01.businessLogic.UserCallback;
 import sap.ass01.businessLogic.UserInfo;
-import sap.ass01.presentation.UserGUICallback;
 
 /**
  * Interface for the user GUI service.

@@ -1,10 +1,7 @@
-package sap.ass01.service;
+package sap.ass01.businessLogic;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-
-import sap.ass01.businessLogic.EBike;
-import sap.ass01.businessLogic.P2d;
 
 /**
  * Interface for notifying about user events.  
@@ -19,7 +16,7 @@ public interface UserCallback extends Remote {
      * @param batteryLevel the ebike's (eventual) new battery level
      * @throws RemoteException
      */
-    void notifyBikeStateChanged(String bikeID, EBike.EBikeState newState, double x, double y, int batteryLevel) throws RemoteException; // TODO x, y => pos?
+    void notifyBikeStateChanged(String bikeID, EBike.EBikeState newState, double x, double y, int batteryLevel) throws RemoteException; 
 
     /**
      * Sends a notification for an event regarding a user's credit update.
