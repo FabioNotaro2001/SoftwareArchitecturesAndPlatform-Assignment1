@@ -3,37 +3,41 @@ package it.unibo.sap;
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import org.junit.jupiter.api.Test;
+
 import static com.tngtech.archunit.library.Architectures.layeredArchitecture;
 
 /**
- * Unit test for simple App.
+ * Unit test for verifying architectural constraints of the application.
  */
 public class AppTest {
-    // TODO: add comments here and report section with further explanation about tests that don't pass.
     /**
-     * Test architetturale per verificare le dipendenze tra i layer.
+     * Architectural test to verify dependencies between layers.
      */
     @Test
     public void architecturalDependenciesTest() {
-        JavaClasses importedClasses = new ClassFileImporter().importPackages("sap.ass01.presentation", "sap.ass01.service", "sap.ass01.businessLogic", "sap.ass01.persistence");
+        // Import classes from specified packages to analyze their dependencies.
+        JavaClasses importedClasses = new ClassFileImporter().importPackages(
+            "sap.ass01.presentation", 
+            "sap.ass01.service", 
+            "sap.ass01.businessLogic", 
+            "sap.ass01.persistence"
+        );
 
-
-        // Layered architecture definition.
-        layeredArchitecture().consideringAllDependencies()
-            .layer("presentation").definedBy("sap.ass01.presentation..")
-            .layer("service").definedBy("sap.ass01.service..")
-            .layer("businessLogic").definedBy("sap.ass01.businessLogic..")
-            .layer("persistence").definedBy("sap.ass01.persistence")
-            
+        // Define the layered architecture.
+        layeredArchitecture()
+            .consideringAllDependencies() // Consider all dependencies, including indirect ones.
+            .layer("presentation").definedBy("sap.ass01.presentation..") // Presentation layer
+            .layer("service").definedBy("sap.ass01.service..") // Service layer
+            .layer("businessLogic").definedBy("sap.ass01.businessLogic..") // Business logic layer
+            .layer("persistence").definedBy("sap.ass01.persistence") // Persistence layer
 
             // Access rules between layers.
-            .whereLayer("presentation").mayNotBeAccessedByAnyLayer()
-            .whereLayer("service").mayOnlyBeAccessedByLayers("presentation") 
-
-            // Strange case: in our implementation businessLogic can be accssed also by presentation layer becuase of EBikeInfo, UserInfo...
-            // TODO: layer presentation è definito come layer aperto perchè prende la tipologia di dato INFOBIKE direttamenta dal business saltando il layer presentation
-            .whereLayer("businessLogic").mayOnlyBeAccessedByLayers("service", "persistence", "presentation")
-            .whereLayer("persistence").mayOnlyBeAccessedByLayers("businessLogic") 
+            .whereLayer("presentation").mayNotBeAccessedByAnyLayer() // Presentation layer should not be accessed by any other layer.
+            .whereLayer("service").mayOnlyBeAccessedByLayers("presentation") // Service layer can only be accessed by the presentation layer.
+            .whereLayer("businessLogic").mayOnlyBeAccessedByLayers("service", "persistence", "presentation") // Business logic can be accessed by service, persistence, or presentation.
+            .whereLayer("persistence").mayOnlyBeAccessedByLayers("businessLogic") // Persistence layer can only be accessed by business logic layer.
+            
+            // Check the defined rules against the imported classes.
             .check(importedClasses);
     }
 }

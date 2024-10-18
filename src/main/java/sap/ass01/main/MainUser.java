@@ -13,18 +13,27 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 
 public class MainUser {
-	private MainUser() {
-	}
+    // Private constructor to prevent instantiation.
+    private MainUser() {
+    }
 
-	public static void main(String[] args) throws RepositoryException, RemoteException, NotBoundException {
-		Registry registry = LocateRegistry.getRegistry();
-		UserAppService userAppService = (UserAppService) registry.lookup(AppServiceImpl.USER_SERVER_NAME);
+    public static void main(String[] args) throws RepositoryException, RemoteException, NotBoundException {
+        // Locate the RMI registry.
+        Registry registry = LocateRegistry.getRegistry();
 
-		UserService userService = new UserServiceImpl(userAppService);
+        // Look up the UserAppService from the RMI registry.
+        UserAppService userAppService = (UserAppService) registry.lookup(AppServiceImpl.USER_SERVER_NAME);
 
-		UnicastRemoteObject.exportObject(userService, 0);
+        // Create an instance of UserServiceImpl which implements the business logic.
+        UserService userService = new UserServiceImpl(userAppService);
 
-		var w = new UserGUI(userService);
-		w.display();
-	}
+        // Export the userService object for RMI calls.
+        UnicastRemoteObject.exportObject(userService, 0);
+
+        // Initialize the User GUI with the UserService.
+        var w = new UserGUI(userService);
+        
+        // Display the User GUI.
+        w.display();
+    }
 }

@@ -1,6 +1,6 @@
-package sap.ass01.businessLogic;
+package sap.ass01.businessLogic; 
 
-import java.rmi.RemoteException;
+import java.rmi.RemoteException; 
 
 /**
  * Interface for notifying about admin events.
@@ -8,14 +8,16 @@ import java.rmi.RemoteException;
 public interface AdminCallback extends UserCallback {
     /**
      * Sends a notification for an event regarding the creation of a new user.
-     * @param userID the user's id
-     * @param credits the user's credit
+     * @param userID the user's id. Represents the unique identifier of the user.
+     * @param credits the user's credit. Represents the initial credits assigned to the new user.
+     * @throws RemoteException if there is a problem with remote communication.
      */
-    void notifyUserCreated(String userID, int credits) throws RemoteException;
+    void notifyUserCreated(String userID, int credits) throws RemoteException; 
 
     /**
-     * Sends a notification for an event regarding the start/end of a ride.
-     * @param rideInfo the ride's information
+     * Sends a notification for an event regarding the start or end of a ride.
+     * @param rideInfo the ride's information. Contains details about the ride, including its status and participants.
+     * @throws RemoteException if there is a problem with remote communication.
      */
-    void notifyRideUpdate(RideInfo rideInfo) throws RemoteException;
+    void notifyRideUpdate(RideInfo rideInfo) throws RemoteException; 
 }
