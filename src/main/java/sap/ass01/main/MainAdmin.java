@@ -1,10 +1,8 @@
 package sap.ass01.main;
 
-import sap.ass01.businessLogic.AdminCallback;
 import sap.ass01.businessLogic.RepositoryException;
 import sap.ass01.presentation.AdminGUI;
 import sap.ass01.service.AdminAppService;
-import sap.ass01.service.AdminService;
 import sap.ass01.service.AdminServiceImpl;
 import sap.ass01.service.AppServiceImpl;
 import java.rmi.NotBoundException;
@@ -29,13 +27,13 @@ public class MainAdmin {
     AdminAppService adminAppService = (AdminAppService) registry.lookup(AppServiceImpl.ADMIN_SERVER_NAME);
     
     // Create an instance of AdminService using the retrieved AdminAppService.
-    AdminService adminService = new AdminServiceImpl(adminAppService); 
+    var adminService = new AdminServiceImpl(adminAppService); 
 
     // Export the AdminService object for remote calls.
-    AdminCallback adminServiceStub = (AdminCallback) UnicastRemoteObject.exportObject((AdminCallback) adminService, 0);
+    UnicastRemoteObject.exportObject(adminService, 0);
 
     // Register the Admin service with the AdminAppService.
-    adminAppService.registerAdmin(adminServiceStub);
+    adminService.init();
 
     // Initialize the Admin GUI and display it.
     var w = new AdminGUI(adminService);

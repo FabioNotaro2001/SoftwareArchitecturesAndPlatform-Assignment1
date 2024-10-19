@@ -15,7 +15,10 @@ public class AdminServiceImpl implements AdminService{
 
     public AdminServiceImpl(AdminAppService adminAppService) throws RemoteException{
         this.adminAppService = adminAppService;
-        //this.adminAppService.registerAdmin(this);
+    }
+
+    public void init() throws RemoteException {
+        this.adminAppService.registerAdmin(this);
     }
 
     @Override
