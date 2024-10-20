@@ -4,6 +4,7 @@ import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import org.junit.jupiter.api.Test;
 import static com.tngtech.archunit.library.Architectures.layeredArchitecture;
+import static com.tngtech.archunit.library.dependencies.SlicesRuleDefinition.slices;
 
 /**
  * Unit test for verifying architectural constraints of the application.
@@ -40,6 +41,11 @@ public class AppTest {
             .check(importedClasses);
     }
 
+    @Test
+    public void testNoCyclicDependenciesOnLayeredArchitecture() {
+        slices().matching("sap.ass01.layered..").should().beFreeOfCycles();
+    }
+
     /**
      * Architectural test to verify dependencies between layers in clean architecture.
      */
@@ -62,5 +68,10 @@ public class AppTest {
             .whereLayer("infrastructure").mayNotBeAccessedByAnyLayer() 
             
             .check(importedClasses);
+    }
+
+    @Test
+    public void testNoCyclicDependenciesOnCleanArchitecture() {
+        slices().matching("sap.ass01.layered..").should().beFreeOfCycles();
     }
 }
