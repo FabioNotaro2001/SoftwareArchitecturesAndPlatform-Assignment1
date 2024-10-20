@@ -1,10 +1,11 @@
 package sap.ass01.clean.main;
 
-import sap.ass01.clean.businessLogic.RepositoryException;
-import sap.ass01.clean.presentation.AdminGUI;
-import sap.ass01.clean.service.AdminAppService;
-import sap.ass01.clean.service.AdminServiceImpl;
-import sap.ass01.clean.service.AppServiceImpl;
+import sap.ass01.clean.domain.RepositoryException;
+import sap.ass01.clean.infrastructure.gui.AdminGUI;
+import sap.ass01.clean.infrastructure.service.AdminAppService;
+import sap.ass01.clean.infrastructure.service.AdminServiceImpl;
+import sap.ass01.clean.infrastructure.service.AppServiceImpl;
+
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;

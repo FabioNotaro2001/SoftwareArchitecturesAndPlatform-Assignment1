@@ -1,11 +1,12 @@
 package sap.ass01.clean.main;
 
-import sap.ass01.clean.businessLogic.RepositoryException;
-import sap.ass01.clean.presentation.UserGUI;
-import sap.ass01.clean.service.AppServiceImpl;
-import sap.ass01.clean.service.UserAppService;
-import sap.ass01.clean.service.UserService;
-import sap.ass01.clean.service.UserServiceImpl;
+import sap.ass01.clean.domain.RepositoryException;
+import sap.ass01.clean.infrastructure.gui.UserGUI;
+import sap.ass01.clean.infrastructure.service.AppServiceImpl;
+import sap.ass01.clean.infrastructure.service.UserAppService;
+import sap.ass01.clean.infrastructure.service.UserService;
+import sap.ass01.clean.infrastructure.service.UserServiceImpl;
+
 import java.rmi.registry.Registry;
 import java.rmi.server.*;
 import java.rmi.NotBoundException;

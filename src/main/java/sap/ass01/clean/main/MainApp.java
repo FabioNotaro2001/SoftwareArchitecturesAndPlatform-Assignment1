@@ -1,10 +1,11 @@
 package sap.ass01.clean.main;
 
-import sap.ass01.clean.businessLogic.RepositoryException;
-import sap.ass01.clean.businessLogic.ServerImpl;
-import sap.ass01.clean.persistence.MyRepoPersistence;
-import sap.ass01.clean.service.AppService;
-import sap.ass01.clean.service.AppServiceImpl;
+import sap.ass01.clean.domain.RepositoryException;
+import sap.ass01.clean.domain.ServerImpl;
+import sap.ass01.clean.infrastructure.repo.MyRepoAdapter;
+import sap.ass01.clean.infrastructure.service.AppService;
+import sap.ass01.clean.infrastructure.service.AppServiceImpl;
+
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -21,7 +22,7 @@ public class MainApp {
     public static void main(String[] args) throws RepositoryException {
         try {
             // Initialize the server with the repository persistence implementation.
-            ServerImpl server = new ServerImpl(new MyRepoPersistence());
+            ServerImpl server = new ServerImpl(new MyRepoAdapter());
 
             // Create the application service using the server instance.
             AppService service = new AppServiceImpl(server);

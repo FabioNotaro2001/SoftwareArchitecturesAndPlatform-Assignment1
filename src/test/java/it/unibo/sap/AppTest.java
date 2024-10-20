@@ -10,7 +10,7 @@ import static com.tngtech.archunit.library.Architectures.layeredArchitecture;
  */
 public class AppTest {
     /**
-     * Architectural test to verify dependencies between layers.
+     * Architectural test to verify dependencies between layers in layered architecture.
      */
     @Test
     public void testOnLayeredArchitectureDependencies() {
@@ -37,6 +37,30 @@ public class AppTest {
             .whereLayer("persistence").mayOnlyBeAccessedByLayers("businessLogic") // Persistence layer can only be accessed by business logic layer.
             
             // Check the defined rules against the imported classes.
+            .check(importedClasses);
+    }
+
+    /**
+     * Architectural test to verify dependencies between layers in clean architecture.
+     */
+    @Test
+    public void testOnCleanArchitectureDependencies() {
+        // Import classes from specified packages to analyze their dependencies.
+        JavaClasses importedClasses = new ClassFileImporter().importPackages(
+            "sap.ass01.clean.domain", 
+            "sap.ass01.clean.infrastructure"
+        );
+
+        // Define the clean architecture as a layered architecture.
+        layeredArchitecture()
+            .consideringAllDependencies() // Consider all dependencies, including indirect ones.
+            .layer("domain").definedBy("sap.ass01.clean.domain") // Presentation layer
+            .layer("infrastructure").definedBy("sap.ass01.clean.infrastructure..") // Service layer
+
+            // Access rules between layers.
+            .whereLayer("domain").mayOnlyBeAccessedByLayers("infrastructure") 
+            .whereLayer("infrastructure").mayNotBeAccessedByAnyLayer() 
+            
             .check(importedClasses);
     }
 }
