@@ -60,8 +60,8 @@ public class AppTest {
         // Define the clean architecture as a layered architecture.
         layeredArchitecture()
             .consideringAllDependencies() // Consider all dependencies, including indirect ones.
-            .layer("domain").definedBy("sap.ass01.clean.domain") // Presentation layer
-            .layer("infrastructure").definedBy("sap.ass01.clean.infrastructure..") // Service layer
+            .layer("domain").definedBy("sap.ass01.clean.domain") 
+            .layer("infrastructure").definedBy("sap.ass01.clean.infrastructure..") 
 
             // Access rules between layers.
             .whereLayer("domain").mayOnlyBeAccessedByLayers("infrastructure") 
@@ -72,6 +72,6 @@ public class AppTest {
 
     @Test
     public void testNoCyclicDependenciesOnCleanArchitecture() {
-        slices().matching("sap.ass01.layered..").should().beFreeOfCycles();
+        slices().matching("sap.ass01.clean..").should().beFreeOfCycles();
     }
 }

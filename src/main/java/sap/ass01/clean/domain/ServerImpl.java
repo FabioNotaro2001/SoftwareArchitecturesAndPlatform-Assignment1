@@ -3,7 +3,6 @@ package sap.ass01.clean.domain;
 import java.util.ArrayList; 
 import java.util.List; 
 import java.util.Optional;
-
 import sap.ass01.clean.domain.EBike.EBikeState; 
 
 /**

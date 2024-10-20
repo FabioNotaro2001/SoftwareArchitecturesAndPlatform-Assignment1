@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-
 import sap.ass01.clean.domain.*;
 import sap.ass01.clean.domain.EBike.EBikeState;
 

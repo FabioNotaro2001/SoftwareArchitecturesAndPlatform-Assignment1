@@ -10,7 +10,7 @@ import sap.ass01.clean.domain.*;
 import sap.ass01.clean.domain.EBike.EBikeState;
 
 /**
- * MyRepoPersistence handles the persistence of data related to users and eBikes,
+ * MyRepoAdapter handles the persistence of data related to users and eBikes,
  * storing them in JSON format. This class implements the RepositoryInterface and provides
  * methods for saving and retrieving user and eBike information from a JSON-based storage.
  */

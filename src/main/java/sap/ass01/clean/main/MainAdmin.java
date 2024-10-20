@@ -5,7 +5,6 @@ import sap.ass01.clean.infrastructure.gui.AdminGUI;
 import sap.ass01.clean.infrastructure.service.AdminAppService;
 import sap.ass01.clean.infrastructure.service.AdminServiceImpl;
 import sap.ass01.clean.infrastructure.service.AppServiceImpl;
-
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;

@@ -4,7 +4,6 @@ import javax.swing.*;
 
 import sap.ass01.clean.domain.RepositoryException;
 import sap.ass01.clean.infrastructure.service.UserService;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

@@ -5,7 +5,6 @@ import sap.ass01.clean.domain.ServerImpl;
 import sap.ass01.clean.infrastructure.repo.MyRepoAdapter;
 import sap.ass01.clean.infrastructure.service.AppService;
 import sap.ass01.clean.infrastructure.service.AppServiceImpl;
-
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;

@@ -6,7 +6,6 @@ import sap.ass01.clean.infrastructure.service.AppServiceImpl;
 import sap.ass01.clean.infrastructure.service.UserAppService;
 import sap.ass01.clean.infrastructure.service.UserService;
 import sap.ass01.clean.infrastructure.service.UserServiceImpl;
-
 import java.rmi.registry.Registry;
 import java.rmi.server.*;
 import java.rmi.NotBoundException;

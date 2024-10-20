@@ -8,7 +8,6 @@ import java.rmi.RemoteException;
 import java.util.Vector;
 import javax.swing.*;
 import java.awt.*;
-
 import sap.ass01.clean.domain.RepositoryException;
 import sap.ass01.clean.domain.RideInfo;
 import sap.ass01.clean.domain.UserInfo;

@@ -2,7 +2,6 @@ package sap.ass01.clean.infrastructure.service;
 
 import java.rmi.RemoteException;
 import java.util.List;
-
 import sap.ass01.clean.domain.AdminCallback;
 import sap.ass01.clean.domain.EBikeInfo;
 import sap.ass01.clean.domain.RepositoryException;

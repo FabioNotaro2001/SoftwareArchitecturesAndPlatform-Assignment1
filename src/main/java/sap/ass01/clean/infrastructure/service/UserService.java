@@ -9,7 +9,6 @@ import sap.ass01.clean.domain.UserCallback;
 import sap.ass01.clean.domain.UserInfo;
 
 /**
- * [SERVICE LAYER][UserService]<-[PRESENTATION LAYER].
  * Interface for the user GUI service, providing methods for user operations.
  */
 public interface UserService extends UserCallback {

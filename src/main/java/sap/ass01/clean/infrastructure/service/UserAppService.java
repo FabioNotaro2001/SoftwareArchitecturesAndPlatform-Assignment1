@@ -1,7 +1,6 @@
 package sap.ass01.clean.infrastructure.service;
 
 import java.rmi.RemoteException;
-
 import sap.ass01.clean.domain.RepositoryException;
 import sap.ass01.clean.domain.RideInfo;
 import sap.ass01.clean.domain.UserCallback;

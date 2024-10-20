@@ -2,7 +2,6 @@ package sap.ass01.clean.infrastructure.service;
 
 import java.rmi.RemoteException;
 import java.util.List;
-
 import sap.ass01.clean.domain.EBikeInfo;
 import sap.ass01.clean.domain.P2d;
 import sap.ass01.clean.domain.RepositoryException;
@@ -11,7 +10,6 @@ import sap.ass01.clean.domain.UserInfo;
 import sap.ass01.clean.domain.EBike.EBikeState;
 
 /**
- * [SERVICE LAYER][UserService]<-[PRESENTATION LAYER].
  * Implementation of the UserService interface, providing user-related operations.
  */
 public class UserServiceImpl implements UserService {
