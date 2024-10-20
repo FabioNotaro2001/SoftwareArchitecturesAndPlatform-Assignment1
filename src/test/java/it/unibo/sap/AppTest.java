@@ -3,7 +3,6 @@ package it.unibo.sap;
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import org.junit.jupiter.api.Test;
-
 import static com.tngtech.archunit.library.Architectures.layeredArchitecture;
 
 /**
@@ -14,22 +13,22 @@ public class AppTest {
      * Architectural test to verify dependencies between layers.
      */
     @Test
-    public void architecturalDependenciesTest() {
+    public void testOnLayeredArchitectureDependencies() {
         // Import classes from specified packages to analyze their dependencies.
         JavaClasses importedClasses = new ClassFileImporter().importPackages(
-            "sap.ass01.presentation", 
-            "sap.ass01.service", 
-            "sap.ass01.businessLogic", 
-            "sap.ass01.persistence"
+            "sap.ass01.layered.presentation", 
+            "sap.ass01.layered.service", 
+            "sap.ass01.layered.businessLogic", 
+            "sap.ass01.layered.persistence"
         );
 
         // Define the layered architecture.
         layeredArchitecture()
             .consideringAllDependencies() // Consider all dependencies, including indirect ones.
-            .layer("presentation").definedBy("sap.ass01.presentation..") // Presentation layer
-            .layer("service").definedBy("sap.ass01.service..") // Service layer
-            .layer("businessLogic").definedBy("sap.ass01.businessLogic..") // Business logic layer
-            .layer("persistence").definedBy("sap.ass01.persistence") // Persistence layer
+            .layer("presentation").definedBy("sap.ass01.layered.presentation") // Presentation layer
+            .layer("service").definedBy("sap.ass01.layered.service") // Service layer
+            .layer("businessLogic").definedBy("sap.ass01.layered.businessLogic") // Business logic layer
+            .layer("persistence").definedBy("sap.ass01.layered.persistence") // Persistence layer
 
             // Access rules between layers.
             .whereLayer("presentation").mayNotBeAccessedByAnyLayer() // Presentation layer should not be accessed by any other layer.
