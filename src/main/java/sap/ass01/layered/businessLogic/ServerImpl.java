@@ -3,8 +3,8 @@ package sap.ass01.layered.businessLogic;
 import java.util.ArrayList; 
 import java.util.List; 
 import java.util.Optional;
-
-import sap.ass01.layered.businessLogic.EBike.EBikeState; 
+import sap.ass01.layered.businessLogic.EBike.EBikeState;
+import sap.ass01.layered.persistence.RepositoryInterface; 
 
 /**
  * Implementation of the Server interface for managing users, e-bikes, and rides.

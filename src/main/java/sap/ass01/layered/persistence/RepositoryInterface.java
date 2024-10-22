@@ -1,10 +1,13 @@
-package sap.ass01.layered.businessLogic;
+package sap.ass01.layered.persistence;
 
 import java.util.List;
 import java.util.Optional;
+import sap.ass01.layered.businessLogic.EBike;
+import sap.ass01.layered.businessLogic.RepositoryException;
+import sap.ass01.layered.businessLogic.User;
 
 /**
- * [PERSISTENCE LAYER][RepositoryInterface]<-[BUSINESS LOGIC LAYER].
+ * [PERSISTENCE LAYER][RepositoryInterface][BUSINESS LOGIC LAYER].
  * Interface for the repository that handles data persistence operations.
  * This interface defines methods for saving and retrieving ebikes and users.
  */
