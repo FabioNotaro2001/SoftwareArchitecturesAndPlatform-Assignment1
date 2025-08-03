@@ -1,28 +1,100 @@
-#### Software Architecture and Platforms - a.y. 2024-2025
- 
-# Assignment #01 - 20241004 
+# Software Architectures and Platforms - Assignment 1
 
-v0.9.0-20241004
+## Overview
 
-- **Description:** Consider the "EBike application" demo included in this repo. Currently it is implemented as a BBoM, without following any specific software architecture. We want to: 
+This project is part of the Software Architectures and Platforms course (academic year 2024–2025). It involves the development of a prototype for the "EBike application" demo, transitioning from a Big Ball of Mud (BBoM) to a structured client-server architecture. The backend is designed using layered and microkernel architectural styles.
 
-   - Create a new "EBike application" prototype, based on a client-server (frontend, backend) architecture, with the backend designed using a layered and micro-kernel software architecture styles. The prototype: 
-     -  should allow remote users and administrators to interact with the system;  
-     -  should upport some level of data persistency and should make it possible: to change the persistent model and technology (e.g. MySQL, MongoDB, etc) without changing anything in the other layers;  
-     -  should allow to change or add front-ends (presentation layer) without changing other layers (such as the business logic layer); 
-     -  should allow to dynamically extend  the set of functionalities available to users [*].
-     
-     [*] this point will be refined after the lecture on Micro-Kernel architectural style.
+### Objectives
 
-       
-  - Identify a set of fitness functions useful to assess the structural properties of the architecture, to be checked using the proper tools (e.g. ArchUnit).      
-  - Write a report including:  
-     - the description of the architecture structure using C&C view(s);  
-     - the description of a core set of quality attribute and the quality attribute scenarios, driving the design of the architecture;
-     - the description of the set of fiftness functions used to assess the quality of the architecture, and the result of some  validation carried on the system.
+- **Client-Server Architecture**: Implement a frontend and backend to facilitate interaction between remote users and administrators.
+- **Backend Design**: Adopt layered and microkernel architecture styles for the backend.
+- **Functionalities**:
+  - User and administrator authentication.
+  - Real-time tracking of e-bike locations.
+  - Management of user profiles and ride histories.
+  - Administrative features for monitoring and analytics.
 
-    
-- **Deliverable**:  a zipped folder ``Assignment-01-<Surname>`` including a maven-based or gradle-based project, with sources and the report in PDF. The deliverable can be submitted using a link on the course web site.
+## Project Structure
 
-- **Deadline:** October 18, 2024 - 9:00 AM
- 
+The project is organized as follows:
+
+
+├── database/ # Database schema and migration files
+├── src/ # Source code for backend and frontend
+│ ├── backend/ # Backend implementation
+│ └── frontend/ # Frontend implementation
+├── target/ # Compiled classes and build outputs
+├── .gitignore # Git ignore file
+├── pom.xml # Maven project configuration
+└── README.md # Project documentation
+
+
+## Prerequisites
+
+Ensure you have the following installed:
+
+- Java 17 or higher
+- Maven 3.8.1 or higher
+- Git
+- Docker (optional, for containerized deployment)
+
+## Setup and Installation
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/FabioNotaro2001/SoftwareArchitecturesAndPlatform-Assignment1.git
+cd SoftwareArchitecturesAndPlatform-Assignment1
+
+2. Build the Project
+mvn clean install
+
+
+3. Run the Application
+
+To start the backend:
+mvn spring-boot:run
+
+The backend will be accessible at http://localhost:8080.
+
+To start the frontend:
+cd src/frontend
+npm install
+npm start
+
+The frontend will be accessible at http://localhost:3000.
+4. Optional: Docker Deployment
+
+To build and run the application using Docker:
+docker-compose up --build
+
+This will set up both the backend and frontend services.
+Usage
+
+    Frontend: Access the application through your web browser at http://localhost:3000.
+
+    Backend API: The backend provides RESTful APIs accessible at http://localhost:8080/api.
+
+Testing
+
+Unit and integration tests are located in the src/test directory. To run the tests:
+mvn test
+
+Contributing
+
+Contributions are welcome! Please fork the repository, create a new branch, and submit a pull request with your changes.
+License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+Acknowledgements
+
+    Spring Boot for backend development.
+
+    React for frontend development.
+
+    Docker for containerization.
+
+    Maven for project management.
+Contact
+
+For any questions or feedback, please contact Fabio Notaro.
