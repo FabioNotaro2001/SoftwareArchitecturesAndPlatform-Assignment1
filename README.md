@@ -6,12 +6,12 @@ This project is part of the Software Architectures and Platforms course (academi
 
 ### Objectives
 
-- **Client-Server Architecture**: Implement a frontend and backend to facilitate interaction between remote users and administrators.
-- **Backend Design**: Adopt layered and microkernel architecture styles for the backend.
-- **Functionalities**:
-  - User and administrator authentication.
-  - Real-time tracking of e-bike locations.
-  - Management of user profiles and ride histories.
+- **Client-Server Architecture** -> implement a frontend and backend to facilitate interaction between remote users and administrators
+- **Backend Design** -> adopt layered and microkernel architecture styles for the backend
+- **Functionalities** ->
+  - User and administrator authentication
+  - Real-time tracking of e-bike locations
+  - Management of user profiles and ride histories
   - Administrative features for monitoring and analytics.
 
 ## Project Structure
